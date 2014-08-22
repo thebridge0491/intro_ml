@@ -1,0 +1,10 @@
+hostname = "localhost"
+domain = "inet"
+
+[file1]
+path = "temp"
+ext = "txt"
+
+[user1]
+name = "John"
+age = 35

@@ -1,0 +1,27 @@
+open Swig
+
+let fact_i n = 
+    Int64.of_int @@ get_int @@ Classic_c._fact_i @@ C_int64 n
+let fact_lp n = 
+    Int64.of_int @@ get_int @@ Classic_c._fact_lp @@ C_int64 n
+
+let expt_i b n = 
+    get_float @@ Classic_c._expt_i @@ C_list [C_float b; C_float n]
+let expt_lp b n = 
+    get_float @@ Classic_c._expt_lp @@ C_list [C_float b; C_float n]
+
+
+let lib_main argv =
+    Printf.printf "fact_i %s: %s\n" (Int64.to_string 5L)
+		(Int64.to_string @@ fact_i 5L)
+
+
+let () =
+let (program, re) = (Sys.argv.(0), Str.regexp "lib_main") in
+    try let _ = Str.search_forward re program 0 in
+        lib_main (Sys.argv)
+    with Not_found -> ()
+(*
+let () =
+    if !Sys.interactive then () else lib_main (Sys.argv) ;
+*)

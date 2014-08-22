@@ -1,0 +1,84 @@
+#!/usr/bin/env python
+import os, glob, subprocess
+
+def matches_filepatterns(filepats, paths):
+	import fnmatch
+	matches_pats = [os.path.join(root, file1) for path in paths
+		for root, dirs, files in os.walk(path) for filepat in filepats
+		for file1 in fnmatch.filter(dirs + files, filepat)]
+	return matches_pats
+	
+def remove_pathlist(pathlist):
+	import shutil
+	for path in pathlist:
+		if os.path.exists(path) and os.path.isdir(path):
+			shutil.rmtree(path)
+		elif os.path.exists(path):
+			os.remove(path)
+	
+def copy_pathlist(pathlist, dst):
+	import shutil
+	for path in pathlist:
+		if os.path.exists(path) and os.path.isdir(path):
+			shutil.copytree(path, os.path.join(dst, os.path.basename(path)))
+		elif os.path.exists(path) and not os.path.isdir(path):
+			shutil.copy(path, dst)
+
+
+if '__main__' == __name__:
+	os.makedirs(os.path.join('build'), exist_ok=True)
+	copy_pathlist(['choices'], 'build')
+	remove_pathlist(['choices'])
+	
+	proj_dir = os.getcwd()
+	choices = {
+		'readmeext': '{{readmeext}}{{^readmeext}}.rst{{/readmeext}}',
+		'license': '{{license}}{{^license}}Apache-2.0{{/license}}',
+		'buildtool': '{{buildtool}}{{^buildtool}}oasis{{/buildtool}}',
+		'testfrwk': '{{testfrwk}}{{^testfrwk}}ounit{{/testfrwk}}',
+		'executable': '{{executable}}{{^executable}}no{{/executable}}',
+		'ffilib': '{{ffilib}}{{^ffilib}}none{{/ffilib}}'
+		}
+	nesteddirs = "{{nesteddirs}}{{^nesteddirs}}intro_ml/util{{/nesteddirs}}"
+	parent = "{{parent}}{{^parent}}intro_ml{{/parent}}"
+	
+	if choices['testfrwk'] in ['ounit']:
+		copy_pathlist(glob.glob('build/choices/testfrwk/{0}/*'.format(
+			choices['testfrwk'])), ".")
+	else: # default: ounit
+		copy_pathlist(glob.glob('build/choices/testfrwk/ounit/*'),
+			".")
+	
+	if 'yes' != choices['executable']:
+		remove_pathlist(glob.glob("src/{0}/main.*".format(
+			parent)))
+
+	if choices['ffilib'] in ['ctypes.foreign', 'swig']:
+		copy_pathlist(glob.glob('build/choices/ffi_lib/{0}/*'.format(
+			choices['ffilib'])), "src/{0}/".format(parent))
+
+	copy_pathlist(glob.glob('build/choices/readme/README{0}'.format(
+		choices['readmeext'])), 'README{0}'.format(choices['readmeext']))
+	copy_pathlist(glob.glob('build/choices/_parent_readme/README{0}'.format(
+		choices['readmeext'])), 'build/choices/_parent_init/README{0}'.format(
+		choices['readmeext']))
+
+	if choices['license'] in ['Apache-2.0', 'MIT', 'BSD-3-Clause', 
+			'GPL-3.0+', 'ISC', 'Unlicense']:
+		copy_pathlist(glob.glob('build/choices/license/LICENSE_{0}'.format(
+			choices['license'])), 'LICENSE')
+
+	if choices['buildtool'] in ['oasis', 'ocamlbuild', 'make']:
+		copy_pathlist(glob.glob('build/choices/build_tool/{0}/*'.format(
+			choices['buildtool'])), '.')
+	else: # default: oasis
+		copy_pathlist(glob.glob('build/choices/build_tool/oasis/*'), '.')
+	
+	if os.path.exists('../_templates') and os.path.isdir('../_templates'):
+		skeletondir = {{#skeletondir}}'{{skeletondir}}'{{/skeletondir}}{{^skeletondir}}'{0}/Templates/mustache/skeleton-ml'.format(os.getenv('HOME')){{/skeletondir}}
+		skel_pardir = os.path.dirname(skeletondir)
+		remove_pathlist([os.path.join('../_templates/mustache/',
+			os.path.basename(skeletondir))])
+		os.makedirs(os.path.join('../_templates/mustache'), exist_ok=True)
+		copy_pathlist(glob.glob('{0}/render_mustache.*'.format(
+			skel_pardir))+[skeletondir], '../_templates/mustache/')

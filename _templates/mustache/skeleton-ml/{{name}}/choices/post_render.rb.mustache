@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby -w
+
+require 'English'
+require 'fileutils'
+
+if __FILE__ == $PROGRAM_NAME
+	FileUtils.mkdir_p('build')
+	FileUtils.cp_r('choices', 'build')
+	FileUtils.rm_r('choices')
+	
+	choices = {
+		:readmeext => '{{readmeext}}{{^readmeext}}.rst{{/readmeext}}',
+		:license => '{{license}}{{^license}}Apache-2.0{{/license}}',
+		:buildtool => '{{buildtool}}{{^buildtool}}oasis{{/buildtool}}',
+		:testfrwk => '{{testfrwk}}{{^testfrwk}}ounit{{/testfrwk}}',
+		:executable => '{{executable}}{{^executable}}no{{/executable}}',
+		:ffilib => '{{ffilib}}{{^ffilib}}none{{/ffilib}}'
+		}
+	nesteddirs = "{{nesteddirs}}{{^nesteddirs}}intro_ml/util{{/nesteddirs}}"
+	parent = "{{parent}}{{^parent}}intro_ml{{/parent}}"
+	
+	if ['ounit'].include?(choices[:testfrwk])
+		FileUtils.cp_r("build/choices/testfrwk/#{choices[:testfrwk]}/.",
+			".")
+	else # default: ounit
+		FileUtils.cp_r('build/choices/testfrwk/ounit/.', 
+			".")
+	end
+	
+	if not 'yes' == choices[:executable]
+		Dir["src/#{parent}/main.*"].each{|p| FileUtils.rm(p)}
+	end
+	
+	if ['ctypes.foreign', 'swig'].include?(choices[:ffilib])
+		FileUtils.cp_r("build/choices/ffi_lib/#{choices[:ffilib]}/.",
+			"src/#{parent}/")
+	end
+	
+	FileUtils.cp("build/choices/readme/README#{choices[:readmeext]}", 
+		"README#{choices[:readmeext]}")
+	FileUtils.cp("build/choices/_parent_readme/README#{choices[:readmeext]}",
+		"build/choices/_parent_init/README#{choices[:readmeext]}")
+	
+	if ['Apache-2.0', 'MIT', 'BSD-3-Clause', 'GPL-3.0+', 'ISC', 'Unlicense'
+			].include?(choices[:license])
+		FileUtils.cp("build/choices/license/LICENSE_#{choices[:license]}", 
+			'LICENSE')
+	end
+	
+	if ['oasis', 'ocamlbuild', 'make'].include?(choices[:buildtool])
+		FileUtils.cp_r("build/choices/build_tool/#{choices[:buildtool]}/.", 
+			'.')
+	else # default: oasis
+		FileUtils.cp_r('build/choices/build_tool/oasis/.', '.')
+	end
+	
+	if File.exist?('../_templates')
+		skeletondir = "{{skeletondir}}{{^skeletondir}}#{ENV['HOME']}/Templates/mustache/skeleton-ml{{/skeletondir}}"
+		skel_pardir = File.dirname(skeletondir)
+		
+		FileUtils.mkdir_p('../_templates/mustache')
+		(Dir["#{skel_pardir}/render_mustache.*"]+[skeletondir]).each{|src|
+			FileUtils.cp_r(src, '../_templates/mustache/')}
+	end
+end

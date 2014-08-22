@@ -1,0 +1,79 @@
+import java.nio.file.*
+
+//println "System.env: " + System.env
+//println "System.properties: " + System.properties
+//System.properties.each{ k, v -> println "$k: $v" }
+
+//----------------------------------------
+def glob_files(String dir) {
+	def items = []
+	Paths.get(dir).toFile().eachFile() { items += it }
+	return items
+}
+
+def run_cmd(String cmd, File dir) {
+	def proc = cmd.execute(null, dir)
+	proc.waitForProcessOutput((Appendable)System.out, System.err)
+	if (0 != proc.exitValue()) {
+		throw new Exception("Command '${cmd}' exited with code: ${proc.exitValue()}")
+	}
+}
+
+def choices = [
+	'readmeext': '{{readmeext}}{{^readmeext}}.rst{{/readmeext}}',
+	'license': '{{license}}{{^license}}Apache-2.0{{/license}}',
+	'buildtool': '{{buildtool}}{{^buildtool}}oasis{{/buildtool}}',
+	'testfrwk': '{{testfrwk}}{{^testfrwk}}ounit{{/testfrwk}}',
+	'executable': '{{executable}}{{^executable}}no{{/executable}}',
+	'ffilib': '{{ffilib}}{{^ffilib}}none{{/ffilib}}'
+	]
+
+def dirX = Paths.get("${System.getProperty('user.dir')}",
+	System.getProperty('toDir', '{{name}}{{^name}}intro_ml-util{{/name}}')).toFile()
+def nesteddirs = '{{nesteddirs}}{{^nesteddirs}}intro_ml/util{{/nesteddirs}}'
+def parent = '{{parent}}{{^parent}}intro_ml{{/parent}}'
+
+["mkdir -p build", "cp -vfR choices build/", "rm -vfr choices"].each {
+	cmd -> run_cmd(cmd, dirX) }
+
+run_cmd("cp -v build/choices/readme/README${choices['readmeext']} README${choices['readmeext']}", dirX)
+run_cmd("cp -v build/choices/_parent_readme/README${choices['readmeext']} build/choices/_parent_init/README${choices['readmeext']}", dirX)
+
+if (choices['license'] in ['Apache-2.0', 'MIT', 'BSD-3-Clause', 'GPL-3.0+',
+		'ISC', 'Unlicense']) {
+	run_cmd("cp -v build/choices/license/LICENSE_${choices['license']} LICENSE", dirX)
+}
+
+if (choices['buildtool'] in ['oasis', 'ocamlbuild', 'make']) {
+	def files = glob_files("${dirX}/build/choices/build_tool/${choices['buildtool']}")
+	run_cmd("cp -vR ${files.join(' ')} .", dirX)
+} else { // default: oasis
+	def files = glob_files("${dirX}/build/choices/build_tool/oasis")
+	run_cmd("cp -vR ${files.join(' ')} .", dirX)
+}
+
+if (choices['testfrwk'] in ['ounit']) {
+	def files = glob_files("${dirX}/build/choices/testfrwk/${choices['testfrwk']}")
+	run_cmd("cp -vR ${files.join(' ')} .", dirX)
+} else { // default: ounit
+	def files = glob_files("${dirX}/build/choices/testfrwk/ounit")
+	run_cmd("cp -vR ${files.join(' ')} .", dirX)
+}
+
+if ('yes' != choices['executable']) {
+    run_cmd("rm -vf src/${parent}/main.c", dirX)
+}
+
+if (choices['ffilib'] in ['ctypes.foreign', 'swig']) {
+	def files = glob_files("${dirX}/build/choices/ffi_lib/${choices['ffilib']}")
+	run_cmd("cp -vR ${files.join(' ')} src/${parent}/", dirX)
+}
+
+if (Files.exists(Paths.get("../_templates")) || Files.exists(Paths.get("_templates"))) {
+	def skeletondir = '{{skeletondir}}{{^skeletondir}}${System.env["HOME"]}/Templates/mustache/skeleton-ml{{/skeletondir}}'
+	def skelParDir = (new File(skeletondir)).parent
+	def scripts = glob_files("${skelParDir}").findAll{f -> 
+		f.path =~ /render_mustache\..*/}
+	run_cmd("mkdir -vp ../_templates/mustache", dirX)
+	run_cmd("cp -vfR ${skeletondir} ${scripts.join(' ')} ../_templates/mustache/", dirX)
+}

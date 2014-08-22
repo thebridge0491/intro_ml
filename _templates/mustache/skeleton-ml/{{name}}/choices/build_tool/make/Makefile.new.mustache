@@ -1,0 +1,89 @@
+# Single package Makefile script.
+.SUFFIXES: .mli .ml .cmi .cmo .cmx .odoc
+help:
+
+PKG_CONFIG = pkg-config --with-path=$(PREFIX)/lib/pkgconfig
+
+pkg = {{project}}{{^project}}util{{/project}}
+parent = {{parent}}{{^parent}}intro_ml{{/parent}}
+proj = $(parent)-$(pkg)
+version = {{version}}{{^version}}0.1.0{{/version}}
+
+MLC = ocamlfind ocamlc -thread -w +a-4
+MLOPT = ocamlfind ocamlopt -thread -w +a-4
+MLDEP = ocamlfind ocamldep
+MLMKLIB = ocamlfind ocamlmklib
+
+ifdef DEBUG
+MLC := $(MLC) -package bisect
+MLOPT := $(MLOPT) -package bisect
+ML_CFLAGS := $(ML_CFLAGS) -g -pp camlp4o,str.cma,`ocamlfind query bisect`/bisect_pp.cmo
+endif
+
+ML_LFLAGS := $(ML_LFLAGS) -I src/$(parent) -I tests
+ML_CFLAGS := $(ML_CFLAGS) -I src/$(parent) -I tests -package oUnit,qcheck
+
+install_files := $(install_files) src/$(parent)/META build/src/$(parent)/*.cmi build/src/$(parent)/*.cmo build/src/$(parent)/*.cma
+optional_files := $(optional_files) build/src/$(parent)/*.cmx build/src/$(parent)/*.cmxa build/src/$(parent)/*.cmxs
+
+src_mli = $(shell $(MLDEP) -sort src/$(parent)/*.mli)
+src_ml = $(shell $(MLDEP) -sort src/$(parent)/*.ml)
+mllibs_main := $(mllibs_main) -package unix,num,str # -package core # -package ppx_sexp_conv
+
+tests_ml = $(shell $(MLDEP) -sort tests/*.ml)
+mllibs_tests := $(mllibs_tests) -package unix,num,str,oUnit,qcheck
+
+build/.depend:
+	-@(cd build ; mkdir -p bin lib/pkgconfig share/doc/$(proj))
+	-@(find src tests -type d -exec mkdir -p build/{} \;)
+	-(cp -fR resources build/)
+	-@echo '' > build/.depend
+	-($(MLDEP) $(ML_CFLAGS) -all $(src_mli) $(src_ml) > $@)
+#	-($(MLDEP) $(ML_CFLAGS) -all $(src_mli) $(swig_mli) $(src_ml) $(swig_ml) > $@)
+
+src/$(parent)/$(proj).cma : $(src_ml:.ml=.cmo)
+#src/$(parent)/$(proj).cma : $(src_ml:.ml=.cmo) # swig.cma
+src/$(parent)/$(proj).cmxa : $(src_ml:.ml=.cmx)
+#src/$(parent)/$(proj).cmxa : $(src_ml:.ml=.cmx) # swig.cmxa
+src/$(parent)/$(proj).cmxs : src/$(parent)/$(proj).cmxa
+src/$(parent)/$(proj).odoc : $(patsubst %,../%,$(src_mli))
+
+tests/ts_main.byte : $(tests_ml:.ml=.cmo)
+	-cd build ; $(LINK.cmo) -linkpkg $(mllibs_tests) $(proj).cma -o $@ $^
+tests/ts_main.native : $(tests_ml:.ml=.cmx)
+	-cd build ; $(LINK.cmx) -linkpkg $(mllibs_tests) $(proj).cmxa -o $@ $^	
+
+.PHONY: build testCompile
+{{#executable}}
+src/$(parent)/main.byte : $(src_ml:.ml=.cmo)
+	-cd build ; $(LINK.cmo) -linkpkg $(mllibs_main) -o $@ $^
+src/$(parent)/main.native : $(src_ml:.ml=.cmx)
+	-cd build ; $(LINK.cmx) -linkpkg $(mllibs_main) -o $@ $^
+
+#build: build/.depend src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxs ## compile
+build: build/.depend src/$(parent)/main.byte src/$(parent)/main.native ## compile
+{{/executable}}
+{{^executable}}
+build: build/.depend src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxs ## compile
+#build: build/.depend src/$(parent)/$(proj)_stubs src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxs ## compile
+{{/executable}}
+testCompile: tests/ts_main.byte tests/ts_main.native ## compile test
+
+{{#executable}}
+DEBUGGER = ddd --gdb	# lldb ; ddd --gdb ; gdb
+# valgrind tools: memcheck helgrind cachegrind massif lackey
+VALGRIND = valgrind --verbose --tool=memcheck
+
+run: src/$(parent)/main.native ## run main [ARGS=""]
+#	export [DY]LD_LIBRARY_PATH=. # ([da|ba|z]sh Linux)
+#	setenv [DY]LD_LIBRARY_PATH . # (tcsh FreeBSD)
+	-cd build ; BISECT_FILE=bisect_main BOLT_CONFIG=resources/bolt_new.conf \
+		src/$(parent)/main.native $(ARGS)
+debug: src/$(parent)/main.byte ## debug main [ARGS=""]
+	-cd build ; BISECT_FILE=bisect_main $(DEBUGGER) src/$(parent)/main.byte $(ARGS)
+valgrind: src/$(parent)/main.native ## valgrind main
+	-cd build ; BISECT_FILE=bisect_main $(VALGRIND) src/$(parent)/main.native
+{{/executable}}
+
+-include build/.depend Makefile-targets.mk
+#-include Makefile-auxffi.mk

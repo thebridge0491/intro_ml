@@ -1,0 +1,30 @@
+{{parentcap}}{{^parentcap}}Intro_ml{{/parentcap}}
+===========================================
+.. .rst to .html: rst2html5 foo.rst > foo.html
+..                pandoc -s -f rst -t html5 -o foo.html foo.rst
+
+{{parentdescription}}{{^parentdescription}}Multi-package project Intro examples for OCaml.{{/parentdescription}}
+
+Installation
+------------
+source code tarball download:
+    
+        # [aria2c --check-certificate=false | wget --no-check-certificate | curl -kOL]
+        
+        FETCHCMD='aria2c --check-certificate=false'
+        
+        $FETCHCMD https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}/[get | archive]/master.zip
+
+version control repository clone:
+        
+        git clone https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}.git
+
+Author/Copyright
+----------------
+Author: {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}}>
+    
+see sub-package's Author/Copyright
+
+License
+-------
+see sub-package's License

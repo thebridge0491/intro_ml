@@ -1,0 +1,107 @@
+OASISFormat: 0.4
+Name:        {{parentcap}}{{^parentcap}}Intro_ml{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}
+Version:     {{version}}{{^version}}0.1.0{{/version}}
+Synopsis:    {{description}}{{^description}}Utilites sub-package for OCaml Intro examples project.{{/description}}
+Authors:     {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}}
+License:     {{license}}{{^license}}Apache-2.0{{/license}}
+Plugins:     META (0.4), DevFiles (0.4)
+#
+ocamlversion:   >= 4.01
+BetaFeatures: findlib_directory
+BuildDepends: unix,num,str
+BuildTools:  ocamlbuild
+LicenseFile: LICENSE
+AlphaFeatures: ocamlbuild_more_args
+XOcamlbuildExtraArgs: -no-links
+XDevFilesEnableConfigure: false
+XDevFilesMakefileNoTargets: install, uninstall, reinstall
+
+SourceRepository master
+  Type:      git
+  Location:  https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}.git
+
+Flag build_test
+#
+  Description: Build with tests
+  Default:   true
+
+Flag coverage
+#
+  Description: Generate coverage data.
+  Default:   false
+
+{{^executable}}
+Library "{{parent}}{{^parent}}intro_ml{{/parent}}{{joiner}}{{^joiner}}.{{/joiner}}{{project}}{{^project}}util{{/project}}"
+  Path:      src/{{parent}}{{^parent}}intro_ml{{/parent}}
+  Modules:   {{projectcap}}{{^projectcap}}Util{{/projectcap}}
+#
+  InternalModules: 
+  BuildDepends: inifiles
+  FindlibContainers: {{parent}}{{^parent}}intro_ml{{/parent}}
+  FindlibDirectory: {{project}}{{^project}}util{{/project}}
+  FindlibName: {{project}}{{^project}}util{{/project}}
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+  ## note: ocaml setup.ml -configure --prefix $(PREFIX)
+  #CCOpt:     -Wall -pedantic -std=c99 -m64 -fPIC -I$prefix/include
+  #CCLib:     -rpath $prefix/lib -L$prefix/lib -lintro_c-practice
+  #Modules+:  Ffi_??
+  #InternalModules+: Classic_c
+  #BuildDepends+: ctypes,ctypes.foreign
+  #BuildDepends+: swig
+  #CSources:  classic_c_wrap.c
+  ##CCLib+:    -l{{name}}{{^name}}intro_ml-util{{/name}}_stubs
+  ##DllLib+:   -l{{name}}{{^name}}intro_ml-util{{/name}}_stubs
+
+Document "{{parent}}{{^parent}}intro_ml{{/parent}}{{joiner}}{{^joiner}}.{{/joiner}}{{project}}{{^project}}util{{/project}}"
+  Title:     {{parentcap}}{{^parentcap}}Intro_ml{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}
+  InstallDir: $docdir
+#
+  BuildTools+: ocamldoc
+  Type:      ocamlbuild (0.4)
+  XOCamlbuildPath: .
+  XOCamlbuildLibraries: {{parent}}{{^parent}}intro_ml{{/parent}}{{joiner}}{{^joiner}}.{{/joiner}}{{project}}{{^project}}util{{/project}}
+  XOcamlbuildExtraArgs: -no-links
+{{/executable}}
+
+Executable ts_main
+  Path:      tests
+  MainIs:    ts_main.ml
+#
+  BuildDepends: oUnit,qcheck{{^executable}},{{parent}}{{^parent}}intro_ml{{/parent}}{{joiner}}{{^joiner}}.{{/joiner}}{{project}}{{^project}}util{{/project}}{{/executable}}
+  Install:   false
+  Build$:    flag(build_test)
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+
+Test ts_main
+  Command:   BISECT_FILE=bisect_test $ts_main || true
+#
+  WorkingDirectory: _build
+  TestTools: ts_main
+  Run$:      flag(build_test) && flag(tests)
+
+{{#executable}}
+Executable "Main-{{name}}{{^name}}intro_ml-util{{/name}}"
+  Path:      src/{{parent}}{{^parent}}intro_ml{{/parent}}
+  MainIs:    main.ml
+#
+  BuildDepends: inifiles,bolt,yojson,ezjsonm
+  CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+{{/executable}}
+
+#Library "swig"
+#  Path:      src/swig
+#  Modules:   Swig
+##
+#  InternalModules: 
+#  BuildDepends: 
+#  ByteOpt:   -thread -w +a-4
+#  NativeOpt: -thread -w +a-4

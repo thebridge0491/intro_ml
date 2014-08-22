@@ -1,0 +1,63 @@
+# Single package Makefile script.
+help:
+
+PKG_CONFIG = pkg-config --with-path=$(PREFIX)/lib/pkgconfig
+
+pkg = {{project}}{{^project}}util{{/project}}
+parent = {{parent}}{{^parent}}intro_ml{{/parent}}
+proj = $(parent)-$(pkg)
+version = {{version}}{{^version}}0.1.0{{/version}}
+
+MLBUILD = ocamlbuild -build-dir _build # -use-ocamlfind -tags thread
+
+ifdef DEBUG
+MLBUILD := $(MLBUILD) -pkgs bisect
+ML_CFLAGS := $(ML_CFLAGS) -tags debug -pp camlp4o,str.cma,`ocamlfind query bisect`/bisect_pp.cmo
+endif
+
+ML_LFLAGS := $(ML_LFLAGS) -lflags -I,src/$(parent) # -Is src/$(parent),_build/src/$(parent)
+ML_CFLAGS := $(ML_CFLAGS) # -cflags -w +a-4 -Is src/$(parent),_build/src/$(parent)
+
+install_files := $(install_files) src/$(parent)/META _build/src/$(parent)/*.cmi _build/src/$(parent)/*.cmo _build/src/$(parent)/*.cma
+optional_files := $(optional_files) _build/src/$(parent)/*.cmx _build/src/$(parent)/*.cmxa _build/src/$(parent)/*.cmxs
+
+mllibs_main := $(mllibs_main) # -pkgs unix,num,str # -pkgs core # -pkgs ppx_sexp_conv
+
+mllibs_tests := $(mllibs_tests) -libs $(proj) # -pkgs unix,num,str,oUnit,qcheck
+
+tests/ts_main.byte tests/ts_main.native : 
+	-$(MLBUILD) $(ML_LFLAGS) $(ML_CFLAGS) $(mllibs_tests) $@ $(ARGS)
+
+.PHONY: build testCompile
+{{#executable}}
+src/$(parent)/main.byte src/$(parent)/main.native : 
+	-$(MLBUILD) $(ML_LFLAGS) $(ML_CFLAGS) $(mllibs_main) $@ $(ARGS)
+
+#build: src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxa src/$(parent)/$(proj).cmxs ## compile
+build: src/$(parent)/main.byte src/$(parent)/main.native ## compile
+{{/executable}}
+{{^executable}}
+build: src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxa src/$(parent)/$(proj).cmxs ## compile
+#build: src/$(parent)/lib$(proj)_stubs.a src/$(parent)/$(proj).cma src/$(parent)/$(proj).cmxa src/$(parent)/$(proj).cmxs ## compile
+{{/executable}}
+testCompile: tests/ts_main.byte tests/ts_main.native ## compile test
+
+{{#executable}}
+DEBUGGER = ddd --gdb	# lldb ; ddd --gdb ; gdb
+# valgrind tools: memcheck helgrind cachegrind massif lackey
+VALGRIND = valgrind --verbose --tool=memcheck
+
+run: _build/src/$(parent)/main.native ## run main [ARGS=""]
+#	export [DY]LD_LIBRARY_PATH=. # ([da|ba|z]sh Linux)
+#	setenv [DY]LD_LIBRARY_PATH . # (tcsh FreeBSD)
+	-BISECT_FILE=_build/bisect_main BOLT_CONFIG=resources/bolt_new.conf \
+		_build/src/$(parent)/main.native $(ARGS)
+debug: _build/src/$(parent)/main.byte ## debug main [ARGS=""]
+	-BISECT_FILE=_build/bisect_main $(DEBUGGER) \
+		_build/src/$(parent)/main.byte $(ARGS)
+valgrind: _build/src/$(parent)/main.native ## valgrind main
+	-BISECT_FILE=_build/bisect_main $(VALGRIND) _build/src/$(parent)/main.native
+{{/executable}}
+
+-include Makefile-targets.mk
+#-include Makefile-auxffi.mk

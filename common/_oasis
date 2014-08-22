@@ -1,0 +1,94 @@
+OASISFormat: 0.4
+Name:        Intro_ml.Util
+Version:     0.1.0
+Synopsis:    Utilites sub-package for OCaml Intro examples project.
+Authors:     thebridge0491
+License:     Apache-2.0
+Plugins:     META (0.4), DevFiles (0.4)
+#
+ocamlversion:   >= 4.01
+BetaFeatures: findlib_directory
+BuildDepends: unix,num,str
+BuildTools:  ocamlbuild
+LicenseFile: LICENSE
+AlphaFeatures: ocamlbuild_more_args
+XOcamlbuildExtraArgs: -no-links
+XDevFilesEnableConfigure: false
+XDevFilesMakefileNoTargets: install, uninstall, reinstall
+
+SourceRepository master
+  Type:      git
+  Location:  https://bitbucket.org/thebridge0491/intro_ml.git
+
+Flag build_test
+#
+  Description: Build with tests
+  Default:   true
+
+Flag coverage
+#
+  Description: Generate coverage data.
+  Default:   false
+
+Library "intro_ml.util"
+  Path:      src/intro_ml
+  Modules:   Util
+#
+  InternalModules: 
+  BuildDepends: inifiles
+  FindlibContainers: intro_ml
+  FindlibDirectory: util
+  FindlibName: util
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+  ## note: ocaml setup.ml -configure --prefix $(PREFIX)
+  #CCOpt:     -Wall -pedantic -std=c99 -m64 -fPIC -I$prefix/include
+  #CCLib:     -rpath $prefix/lib -L$prefix/lib -lintro_c-practice
+  #Modules+:  Ffi_??
+  #InternalModules+: Classic_c
+  #BuildDepends+: ctypes,ctypes.foreign
+  #BuildDepends+: swig
+  #CSources:  classic_c_wrap.c
+  ##CCLib+:    -lintro_ml-util_stubs
+  ##DllLib+:   -lintro_ml-util_stubs
+
+Document "intro_ml.util"
+  Title:     Intro_ml.Util
+  InstallDir: $docdir
+#
+  BuildTools+: ocamldoc
+  Type:      ocamlbuild (0.4)
+  XOCamlbuildPath: .
+  XOCamlbuildLibraries: intro_ml.util
+  XOcamlbuildExtraArgs: -no-links
+
+Executable ts_main
+  Path:      tests
+  MainIs:    ts_main.ml
+#
+  BuildDepends: oUnit,qcheck,intro_ml.util
+  Install:   false
+  Build$:    flag(build_test)
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+
+Test ts_main
+  Command:   BISECT_FILE=bisect_test $ts_main || true
+#
+  WorkingDirectory: _build
+  TestTools: ts_main
+  Run$:      flag(build_test) && flag(tests)
+
+
+#Library "swig"
+#  Path:      src/swig
+#  Modules:   Swig
+##
+#  InternalModules: 
+#  BuildDepends: 
+#  ByteOpt:   -thread -w +a-4
+#  NativeOpt: -thread -w +a-4

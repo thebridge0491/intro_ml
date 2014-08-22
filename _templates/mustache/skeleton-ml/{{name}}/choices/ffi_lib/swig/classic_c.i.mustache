@@ -1,0 +1,18 @@
+%module classic_c
+
+%{
+#include <stdlib.h>
+#include "intro_c/classic.h"
+%}
+
+//%include <carray.i>
+%include "intro_c/classic.h"
+//extern unsigned long fact_i(const unsigned int n);
+//extern unsigned long fact_lp(const unsigned int n);
+
+//extern float expt_i(const float b, const float n);
+//extern float expt_lp(const float b, const float n);
+
+// mkdir -p _build src/swig ; //(cd _build ; swig -ocaml -co carray.i)
+// (cd src/swig ; swig -ocaml -co swig.mli ; swig -ocaml -co swig.ml)
+// swig -ocaml -v -I$(PREFIX)/include -outdir src/{{parent}}{{^parent}}intro_ml{{/parent}} -o src/{{parent}}{{^parent}}intro_ml{{/parent}}/classic_c_wrap.c src/{{parent}}{{^parent}}intro_ml{{/parent}}/classic_c.i

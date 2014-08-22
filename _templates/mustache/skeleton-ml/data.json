@@ -1,0 +1,36 @@
+{
+  "groupid": false,
+  "category": false,
+  "parent": "intro_ml",
+  "parentdescription": "Multi-package project Intro examples for OCaml.",
+  "project": "util",
+  "description": "Utilites sub-package for OCaml Intro examples project.",
+  "version": "0.1.0",
+  "separator": "-",
+  "joiner": ".",
+  "parentregex": "^[a-z][-_a-z0-9]+$",
+  "projectregex": "^[a-z][_a-z0-9]+$",
+  
+  "repohost": "bitbucket.org",
+  "repoacct": "imcomputer",
+  "date": "2014-08-21",
+  
+  "readmeext": ".rst",
+  "license": "Apache-2.0",
+  "buildtool": "oasis",
+  "testfrwk": "ounit",
+  
+  "ffilib": "none",
+  
+  "skeletondir": "Templates/mustache/skeleton-ml",
+  
+  "_choices": {
+    "readmeext": [".rst", ".md", ".adoc"],
+    "license": ["Apache-2.0", "MIT", "BSD-3-Clause", "GPL-3.0+", "ISC", 
+      "Unlicense", "Not open source"],
+    "buildtool": ["oasis", "ocamlbuild", "make"],
+    "testfrwk": ["ounit"],
+    "executable": [false, "yes"],
+    "ffilib": ["none", "ctypes.foreign", "swig"]
+  }
+}

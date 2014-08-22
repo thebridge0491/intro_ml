@@ -1,0 +1,70 @@
+OASISFormat: 0.4
+Name:        Intro_ml.Intro
+Version:     0.1.0
+Synopsis:    Main app sub-package for OCaml Intro examples project.
+Authors:     thebridge0491
+License:     Apache-2.0
+Plugins:     META (0.4), DevFiles (0.4)
+#
+ocamlversion:   >= 4.01
+BetaFeatures: findlib_directory
+BuildDepends: unix,num,str
+BuildTools:  ocamlbuild
+LicenseFile: LICENSE
+AlphaFeatures: ocamlbuild_more_args
+XOcamlbuildExtraArgs: -no-links
+XDevFilesEnableConfigure: false
+XDevFilesMakefileNoTargets: install, uninstall, reinstall
+
+SourceRepository master
+  Type:      git
+  Location:  https://bitbucket.org/thebridge0491/intro_ml.git
+
+Flag build_test
+#
+  Description: Build with tests
+  Default:   true
+
+Flag coverage
+#
+  Description: Generate coverage data.
+  Default:   false
+
+
+Executable ts_main
+  Path:      tests
+  MainIs:    ts_main.ml
+#
+  BuildDepends: oUnit,qcheck
+  Install:   false
+  Build$:    flag(build_test)
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+
+Test ts_main
+  Command:   BISECT_FILE=bisect_test $ts_main || true
+#
+  WorkingDirectory: _build
+  TestTools: ts_main
+  Run$:      flag(build_test) && flag(tests)
+
+Executable "Main-intro_ml-intro"
+  Path:      src/intro_ml
+  MainIs:    main.ml
+#
+  BuildDepends: inifiles,bolt,yojson,ezjsonm
+  CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+
+#Library "swig"
+#  Path:      src/swig
+#  Modules:   Swig
+##
+#  InternalModules: 
+#  BuildDepends: 
+#  ByteOpt:   -thread -w +a-4
+#  NativeOpt: -thread -w +a-4

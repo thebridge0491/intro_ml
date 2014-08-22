@@ -1,0 +1,63 @@
+{{parentcap}}{{^parentcap}}Intro_ml{{/parentcap}}{{joiner}}{{^joiner}}.{{/joiner}}{{projectcap}}{{^projectcap}}Util{{/projectcap}}
+===========================================
+.. .rst to .html: rst2html5 foo.rst > foo.html
+..                pandoc -s -f rst -t html5 -o foo.html foo.rst
+
+{{description}}{{^description}}Utilities sub-package for OCaml Intro examples project.{{/description}}
+
+Installation
+------------
+source code tarball download:
+    
+        # [aria2c --check-certificate=false | wget --no-check-certificate | curl -kOL]
+        
+        FETCHCMD='aria2c --check-certificate=false'
+        
+        $FETCHCMD https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}/[get | archive]/master.zip
+
+version control repository clone:
+        
+        git clone https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}.git
+
+build example with [ocamlbuild | make]:
+cd <path> ; [sh] ./configure.sh [--prefix=$PREFIX] [--help]
+
+make build [test]
+
+[sudo] make install
+
+build example with oasis:
+cd <path>
+
+[oasis setup -setup-update none]
+
+ocaml setup.ml -configure --enable-tests [--prefix $PREFIX]
+
+opam pin add . ; opam install . [; ocaml setup.ml [-info] -install]
+
+Usage
+-----
+{{#executable}}
+        [env RSRC_PATH=<path>/resources] [$PREFIX/bin/]Main-{{name}}{{^name}}intro_ml-util{{/name}} [-h]
+{{/executable}}
+{{^executable}}
+        // PKG_CONFIG='pkg-config --with-path=$PREFIX/lib/pkgconfig'
+        
+        // $PKG_CONFIG --cflags --libs <ffi-lib>
+
+        [LD_LIBRARY_PATH=$PREFIX/lib] ocaml
+        
+        # #use "topfind" ;;
+        
+        # #require "{{parent}}{{^parent}}intro_ml{{/parent}}.{{project}}{{^project}}util{{/project}}" ;;
+        
+        # {{projectcap}}{{^projectcap}}Util{{/projectcap}}.cartesian_prod [0; 1; 2] [10; 20; 30] ;;
+{{/executable}}
+
+Author/Copyright
+----------------
+Copyright (c) {{year}}{{^year}}2014{{/year}} by {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}}>
+
+License
+-------
+Licensed under the {{license}}{{^license}}Apache-2.0{{/license}} License. See LICENSE for details.

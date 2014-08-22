@@ -1,0 +1,12 @@
+package "util" (
+ version = "0.1.0"
+ description = "Utilites sub-package for OCaml Intro examples project."
+ directory = "util"
+ requires = "unix num str"
+ #requires = "unix num str ctypes ctypes.foreign"
+ archive(byte) = "intro_ml-util.cma"
+ archive(byte, plugin) = "intro_ml-util.cma"
+ archive(native) = "intro_ml-util.cmxa"
+ archive(native, plugin) = "intro_ml-util.cmxs"
+ exists_if = "intro_ml-util.cma"
+)
