@@ -1,6 +1,6 @@
 #!/bin/sh
 # (*
-BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query bolt` -I src -I tests -I _build/src/swig -I _build/src/intro_ml $0 $@
+BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query bolt` -I src -I tests -I _build/src/intro_ml $0 $@
 *) use "topfind" ;;
 (* #!/usr/bin/env ocaml *)
 
@@ -37,10 +37,19 @@ open BatteriesThread ;;           (* open Batteries ;; *) *)
 #require "qcheck" ;;
 #load "bisect.cma" ;;
 #load "bolt.cma" ;;
+(* #require "ctypes" ;;
+#require "ctypes.foreign" ;; *)
+(* #load "swig.cma" ;; *)
 
-(* #mod_use "intro_ml/intro.ml" ;; *)
-(* #load "intro_ml-intro.cma" ;; *)
 
-#mod_use "tc_new.ml" ;;
-#mod_use "tp_new.ml" ;;
+#require "intro_ml.util" ;;
+
+#mod_use "intro_ml/practice_Sequenceops.ml" ;;
+#mod_use "intro_ml/practice_Classic.ml" ;;
+#mod_use "intro_ml/practice.ml" ;;
+
+#mod_use "tc_classic.ml" ;;
+#mod_use "tc_sequenceops.ml" ;;
+#mod_use "tp_classic.ml" ;;
+#mod_use "tp_sequenceops.ml" ;;
 #use "ts_main.ml" ;;

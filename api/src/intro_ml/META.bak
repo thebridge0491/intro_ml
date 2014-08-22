@@ -1,0 +1,12 @@
+package "practice" (
+ version = "0.1.0"
+ description = "Practice sub-package for OCaml Intro examples project."
+ directory = "practice"
+ requires = "unix num str"
+ #requires = "unix num str ctypes ctypes.foreign"
+ archive(byte) = "intro_ml-practice.cma"
+ archive(byte, plugin) = "intro_ml-practice.cma"
+ archive(native) = "intro_ml-practice.cmxa"
+ archive(native, plugin) = "intro_ml-practice.cmxs"
+ exists_if = "intro_ml-practice.cma"
+)

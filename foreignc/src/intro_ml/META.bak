@@ -1,0 +1,12 @@
+package "foreignc" (
+ version = "0.1.0"
+ description = "FFI sub-package for OCaml Intro examples project."
+ directory = "foreignc"
+ requires = "unix num str"
+ #requires = "unix num str ctypes ctypes.foreign"
+ archive(byte) = "intro_ml-foreignc.cma"
+ archive(byte, plugin) = "intro_ml-foreignc.cma"
+ archive(native) = "intro_ml-foreignc.cmxa"
+ archive(native, plugin) = "intro_ml-foreignc.cmxs"
+ exists_if = "intro_ml-foreignc.cma"
+)

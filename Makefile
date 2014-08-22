@@ -5,7 +5,7 @@ help:
 #MAKE = make # (GNU make variants: make (Linux) gmake (FreeBSD)
 
 parent = intro_ml
-SUBDIRS = common app
+SUBDIRS = common foreignc api app
 
 .PHONY: configure all build help clean test uninstall install
 configure: $(SUBDIRS) ## configure [OPTS=""]

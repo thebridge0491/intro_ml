@@ -1,0 +1,41 @@
+opam-version: "2.0"
+name: "intro_ml-foreignc"
+version: "0.1.0"
+synopsis: "FFI sub-package for OCaml Intro examples project."
+maintainer: "thebridge0491 <thebridge0491-codelab@yahoo.com>"
+authors: "thebridge0491 <thebridge0491-codelab@yahoo.com>"
+license: "Apache-2.0"
+homepage: "https://bitbucket.org/thebridge0491/intro_ml"
+bug-reports: "https://bitbucket.org/thebridge0491/intro_ml"
+depends: [
+  "bolt" {>= "1.2"}
+  "ctypes" {>= "0.4"}
+  "ctypes-foreign" {>= "0.4"}
+]
+build: [
+  ## with build tool: oasis
+  ["ocaml" "setup.ml" "-configure" "--prefix" "%{prefix}%" "--enable-debug"]
+  ["ocaml" "setup.ml" "-configure"] {! with-test}
+  ["ocaml" "setup.ml" "-configure" "--enable-debug"] {with-test}
+  ["ocaml" "setup.ml" "-configure" "--enable-docs"] {with-doc}
+  
+  ## without build tool: oasis
+  #["sh" "-ex" "./configure.sh" "--prefix=$$PREFIX"] {! with-test}
+  #["sh" "-ex" "./configure.sh" "--prefix=$$PREFIX" "--enable-debug"] {with-test}
+  
+  [make "build"]
+  [make "doc"] {with-doc}
+]
+install: [make "install"]
+remove: [make "uninstall"]
+run-test: [
+  ## with build tool: oasis
+  ["ocaml" "setup.ml" "-configure" "--enable-tests" "--enable-coverage"]
+  
+  [make "test"]
+  [make "report"]
+]
+dev-repo: "git+https://bitbucket.org/thebridge0491/intro_ml"
+url {
+  src: "file://$$PWD"
+}

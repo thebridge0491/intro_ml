@@ -36,7 +36,7 @@ prefix = $(shell $(SETUP) -configure | sed -n 's|Install architecture-independen
 PKG_CONFIG = pkg-config --with-path=$(prefix)/lib/pkgconfig
 
 parent = intro_ml
-pkg = intro
+pkg = foreignc
 proj = $(parent)-$(pkg)
 version = $(shell $(SETUP) -configure | sed -n 's|Package version: [.]* \(.*\)|\1|p')
 
@@ -90,19 +90,5 @@ report:
 	-bisect-report -I _build -html _build/cov/report_main `ls -t _build/bisect_main*.out | head -n1`
 	-bisect-report -I _build -html _build/cov/report_test `ls -t _build/bisect_test*.out | head -n1`
 
-DEBUGGER = ddd --gdb        # lldb ; ddd --gdb; gdb
-# valgrind tools: memcheck helgrind cachegrind massif lackey
-VALGRIND = valgrind --verbose --tool=memcheck
-
-run: _build/src/$(parent)/main.byte
-#	export [DY]LD_LIBRARY_PATH=. # ([da|ba|z]sh Linux)
-#	setenv [DY]LD_LIBRARY_PATH . # (tcsh FreeBSD)
-	-BISECT_FILE=_build/bisect_main BOLT_CONFIG=resources/bolt_new.conf \
-		_build/src/$(parent)/main.byte $(ARGS)
-debug: _build/src/$(parent)/main.byte
-	-BISECT_FILE=_build/bisect_main $(DEBUGGER) \
-		_build/src/$(parent)/main.byte $(ARGS)
-valgrind: _build/src/$(parent)/main.native
-	-BISECT_FILE=_build/bisect_main $(VALGRIND) _build/src/$(parent)/main.native
 
 #-include Makefile-auxffi.mk

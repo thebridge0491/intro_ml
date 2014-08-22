@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <hostname>localhost</hostname>
+  <domain>inet</domain>
+  <file1>
+    <path>temp</path>
+    <ext>txt</ext>
+  </file1>
+  <user1>
+    <name>John</name>
+    <age>35</age>
+  </user1>
+</root>

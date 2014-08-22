@@ -1,0 +1,102 @@
+# Global
+!.gitignore
+
+*~
+
+# WinOS
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-*
+.Trashes
+
+# Linux
+.Trash-*
+
+# VCS
+/CVS/*
+.svn/
+.bzr/
+
+*.log
+/lib/
+lib64/
+pkg/
+temp/
+tmp/
+bin/
+build/
+
+# GNU Autotools
+build-aux/
+m4/
+autom4te.cache/
+aclocal.m4/
+Makefile.in
+config.h.in
+configure
+AUTHORS
+ChangeLog
+COPYING
+HACKING
+INSTALL
+NEWS
+README
+
+# C
+*.so
+*.so.*
+*.la
+*.dylib
+*.dll
+*.lib
+*.pdb
+*.a
+
+# JVM
+*.class
+hs_err_pid*
+target/
+classes/
+javalib/
+.jip*
+
+# Python
+__pycache__/
+.pytest_cache/
+.hypothesis/
+htmlcov/
+.cache/
+.tox/
+_build/
+develop-eggs/
+docs/_build/
+downloads/
+env/
+.eggs/
+eggs/
+*.egg-info/
+dist/
+*.py[cod]
+*$py.class
+.coverage*
+
+# Swift | Obj-C | Xcode
+DerivedData/
+xcuserdata/
+Packages/
+.build/
+Package.resolved
+*.xcworkspace
+
+
+setup.data

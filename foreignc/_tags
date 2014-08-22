@@ -1,0 +1,54 @@
+# OASIS_START
+# DO NOT EDIT (digest: c644578400d4a6429ddf56609562ee11)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library intro_ml.foreignc
+"src/intro_ml/intro_ml.foreignc.cmxs": use_intro_ml.foreignc
+<src/intro_ml/*.ml{,i,y}>: oasis_library_intro_ml_foreignc_ccopt
+<src/intro_ml/intro_ml.foreignc.{cma,cmxa}>: oasis_library_intro_ml_foreignc_cclib
+<src/intro_ml/intro_ml.foreignc.{cma,cmxa}>: oasis_library_intro_ml_foreignc_dlllib
+<src/intro_ml/intro_ml.foreignc.{cma,cmxa}>: oasis_library_intro_ml_foreignc_byte
+<src/intro_ml/*.ml{,i,y}>: oasis_library_intro_ml_foreignc_byte
+<src/intro_ml/intro_ml.foreignc.{cma,cmxa}>: oasis_library_intro_ml_foreignc_native
+<src/intro_ml/*.ml{,i,y}>: oasis_library_intro_ml_foreignc_native
+<src/intro_ml/*.ml{,i,y}>: package(ctypes)
+<src/intro_ml/*.ml{,i,y}>: package(ctypes.foreign)
+<src/intro_ml/*.ml{,i,y}>: package(num)
+<src/intro_ml/*.ml{,i,y}>: package(str)
+<src/intro_ml/*.ml{,i,y}>: package(unix)
+# Executable ts_main
+"tests/ts_main.byte": oasis_executable_ts_main_byte
+<tests/*.ml{,i,y}>: oasis_executable_ts_main_byte
+"tests/ts_main.byte": oasis_executable_ts_main_native
+<tests/*.ml{,i,y}>: oasis_executable_ts_main_native
+"tests/ts_main.byte": package(ctypes)
+"tests/ts_main.byte": package(ctypes.foreign)
+"tests/ts_main.byte": package(intro_ml.util)
+"tests/ts_main.byte": package(num)
+"tests/ts_main.byte": package(oUnit)
+"tests/ts_main.byte": package(qcheck)
+"tests/ts_main.byte": package(str)
+"tests/ts_main.byte": package(unix)
+"tests/ts_main.byte": use_intro_ml.foreignc
+<tests/*.ml{,i,y}>: package(ctypes)
+<tests/*.ml{,i,y}>: package(ctypes.foreign)
+<tests/*.ml{,i,y}>: package(intro_ml.util)
+<tests/*.ml{,i,y}>: package(num)
+<tests/*.ml{,i,y}>: package(oUnit)
+<tests/*.ml{,i,y}>: package(qcheck)
+<tests/*.ml{,i,y}>: package(str)
+<tests/*.ml{,i,y}>: package(unix)
+<tests/*.ml{,i,y}>: use_intro_ml.foreignc
+# OASIS_STOP

@@ -1,7 +1,7 @@
 OASISFormat: 0.4
-Name:        Intro_ml.Intro
+Name:        Intro_ml.Practice
 Version:     0.1.0
-Synopsis:    Main app sub-package for OCaml Intro examples project.
+Synopsis:    Practice sub-package for OCaml Intro examples project.
 Authors:     thebridge0491
 License:     Apache-2.0
 Plugins:     META (0.4), DevFiles (0.4)
@@ -30,12 +30,35 @@ Flag coverage
   Description: Generate coverage data.
   Default:   false
 
+Library "intro_ml.practice"
+  Path:      src/intro_ml
+  Modules:   Practice
+#
+  InternalModules: Practice_Classic,Practice_Sequenceops
+  BuildDepends: bolt,bisect
+  FindlibContainers: intro_ml
+  FindlibDirectory: practice
+  FindlibName: practice
+  #CompiledObject: best
+  ByteOpt:   -thread -w +a-4
+  #ByteOpt:   -thread -w +a-4 -custom
+  NativeOpt: -thread -w +a-4
+
+Document "intro_ml.practice"
+  Title:     Intro_ml.Practice
+  InstallDir: $docdir
+#
+  BuildTools+: ocamldoc
+  Type:      ocamlbuild (0.4)
+  XOCamlbuildPath: .
+  XOCamlbuildLibraries: intro_ml.practice
+  XOcamlbuildExtraArgs: -no-links
 
 Executable ts_main
   Path:      tests
   MainIs:    ts_main.ml
 #
-  BuildDepends: oUnit,qcheck,intro_ml.util
+  BuildDepends: oUnit,qcheck,bisect,intro_ml.util,intro_ml.practice
   Install:   false
   Build$:    flag(build_test)
   #CompiledObject: best
@@ -49,13 +72,3 @@ Test ts_main
   WorkingDirectory: _build
   TestTools: ts_main
   Run$:      flag(build_test) && flag(tests)
-
-Executable "Main-intro_ml-intro"
-  Path:      src/intro_ml
-  MainIs:    main.ml
-#
-  BuildDepends: inifiles,bolt,yojson,ezjsonm,intro_ml.util,intro_ml.practice
-  #CompiledObject: best
-  ByteOpt:   -thread -w +a-4
-  #ByteOpt:   -thread -w +a-4 -custom
-  NativeOpt: -thread -w +a-4

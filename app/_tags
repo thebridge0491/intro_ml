@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: a906b8c4b08cec44bb9cb955b34ba916)
+# DO NOT EDIT (digest: 5b9b83dd1d11a84caee9c389a13c4b3b)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -19,31 +19,37 @@ true: annot, bin_annot
 <tests/*.ml{,i,y}>: oasis_executable_ts_main_byte
 "tests/ts_main.byte": oasis_executable_ts_main_native
 <tests/*.ml{,i,y}>: oasis_executable_ts_main_native
+"tests/ts_main.byte": package(intro_ml.util)
 "tests/ts_main.byte": package(num)
 "tests/ts_main.byte": package(oUnit)
 "tests/ts_main.byte": package(qcheck)
 "tests/ts_main.byte": package(str)
 "tests/ts_main.byte": package(unix)
+<tests/*.ml{,i,y}>: package(intro_ml.util)
 <tests/*.ml{,i,y}>: package(num)
 <tests/*.ml{,i,y}>: package(oUnit)
 <tests/*.ml{,i,y}>: package(qcheck)
 <tests/*.ml{,i,y}>: package(str)
 <tests/*.ml{,i,y}>: package(unix)
 # Executable Main-intro_ml-intro
-<src/intro_ml/main.{native,byte}>: oasis_executable_main_intro_ml_intro_byte
+"src/intro_ml/main.byte": oasis_executable_main_intro_ml_intro_byte
 <src/intro_ml/*.ml{,i,y}>: oasis_executable_main_intro_ml_intro_byte
-<src/intro_ml/main.{native,byte}>: oasis_executable_main_intro_ml_intro_native
+"src/intro_ml/main.byte": oasis_executable_main_intro_ml_intro_native
 <src/intro_ml/*.ml{,i,y}>: oasis_executable_main_intro_ml_intro_native
-<src/intro_ml/main.{native,byte}>: package(bolt)
-<src/intro_ml/main.{native,byte}>: package(ezjsonm)
-<src/intro_ml/main.{native,byte}>: package(inifiles)
-<src/intro_ml/main.{native,byte}>: package(num)
-<src/intro_ml/main.{native,byte}>: package(str)
-<src/intro_ml/main.{native,byte}>: package(unix)
-<src/intro_ml/main.{native,byte}>: package(yojson)
+"src/intro_ml/main.byte": package(bolt)
+"src/intro_ml/main.byte": package(ezjsonm)
+"src/intro_ml/main.byte": package(inifiles)
+"src/intro_ml/main.byte": package(intro_ml.practice)
+"src/intro_ml/main.byte": package(intro_ml.util)
+"src/intro_ml/main.byte": package(num)
+"src/intro_ml/main.byte": package(str)
+"src/intro_ml/main.byte": package(unix)
+"src/intro_ml/main.byte": package(yojson)
 <src/intro_ml/*.ml{,i,y}>: package(bolt)
 <src/intro_ml/*.ml{,i,y}>: package(ezjsonm)
 <src/intro_ml/*.ml{,i,y}>: package(inifiles)
+<src/intro_ml/*.ml{,i,y}>: package(intro_ml.practice)
+<src/intro_ml/*.ml{,i,y}>: package(intro_ml.util)
 <src/intro_ml/*.ml{,i,y}>: package(num)
 <src/intro_ml/*.ml{,i,y}>: package(str)
 <src/intro_ml/*.ml{,i,y}>: package(unix)

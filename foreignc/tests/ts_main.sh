@@ -37,10 +37,15 @@ open BatteriesThread ;;           (* open Batteries ;; *) *)
 #require "qcheck" ;;
 #load "bisect.cma" ;;
 #load "bolt.cma" ;;
+#require "ctypes" ;;
+#require "ctypes.foreign" ;;
+(* #load "swig.cma" ;; *)
 
-(* #mod_use "intro_ml/intro.ml" ;; *)
-(* #load "intro_ml-intro.cma" ;; *)
+#require "intro_ml.util" ;;
 
-#mod_use "tc_new.ml" ;;
-#mod_use "tp_new.ml" ;;
+(* #mod_use "intro_ml/foreignc.ml" ;; *)
+#load "intro_ml-foreignc.cma" ;;
+#mod_use "tc_classic.ml" ;;
+#mod_use "tp_classic.ml" ;;
+
 #use "ts_main.ml" ;;
