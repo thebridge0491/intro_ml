@@ -5,7 +5,7 @@
 #        sh vcs_bkup.sh fix_template [opts]
 #        sh vcs_bkup.sh changed_files_archive [namePrefix [revID]]
 
-project=${project:-????}
+project=${project:-intro}
 lang_suf=${lang_suf:-_ml}
 
 bundle_revsets() {
