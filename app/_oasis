@@ -35,7 +35,7 @@ Executable ts_main
   Path:      tests
   MainIs:    ts_main.ml
 #
-  BuildDepends: oUnit,qcheck,intro_ml.util
+  BuildDepends: oUnit,qcheck,batteries,intro_ml.util
   Install:   false
   Build$:    flag(build_test)
   #CompiledObject: best

@@ -1,6 +1,6 @@
 #!/bin/sh
 # (*
-BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query bolt` -I src -I tests -I _build/src/swig -I _build/src/intro_ml $0 $@
+BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query bolt` -I src -I tests -I _build/src/intro_ml $0 $@
 *) use "topfind" ;;
 (* #!/usr/bin/env ocaml *)
 
@@ -35,12 +35,15 @@ open BatteriesThread ;;           (* open Batteries ;; *) *)
 
 #require "oUnit" ;;
 #require "qcheck" ;;
+#require "batteries" ;;
 #load "bisect.cma" ;;
 #load "bolt.cma" ;;
 
-(* #mod_use "intro_ml/intro.ml" ;; *)
-(* #load "intro_ml-intro.cma" ;; *)
+#require "intro_ml.util" ;;
 
-#mod_use "tc_new.ml" ;;
-#mod_use "tp_new.ml" ;;
+(* #mod_use "intro_ml/intro.ml" ;; *)
+(* #load "intro_ml.intro.cma" ;; *)
+
+#mod_use "tc_collections.ml" ;;
+#mod_use "tp_collections.ml" ;;
 #use "ts_main.ml" ;;

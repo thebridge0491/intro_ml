@@ -5,7 +5,7 @@ open OUnit
 
 (** Suite of test cases
 *)
-let suite = "Ts_main" >::: [Tc_new.tcases; Tp_new.tprops]
+let suite = "Ts_main" >::: [Tc_collections.tcases; Tp_collections.tprops]
 
 let main argv = 
     let _ = run_test_tt_main suite in ()
