@@ -35,7 +35,8 @@ Library "intro_ml.practice"
   Modules:   Practice
 #
   InternalModules: Practice_Classic,Practice_Sequenceops
-  BuildDepends: bolt,bisect
+                  , Practice_Classic_Puzzles
+  BuildDepends: bolt,bisect,intro_ml.util
   FindlibContainers: intro_ml
   FindlibDirectory: practice
   FindlibName: practice

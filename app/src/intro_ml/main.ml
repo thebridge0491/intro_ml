@@ -35,6 +35,8 @@ let run_intro (rsrc_path, opts_rec) =
     let (rexp, lst) = (Str.regexp_case_fold "^quit$", [2; 1; 0; 4; 3]) in
     let _ = Random.init (int_of_float time_in) in
     let (num_val, num_arr) = (ref 0, [|0b1011; 0o13; 0xb; 11|]) in
+    let answer = Classic.nqueens 8 in
+    let queens_ndx = Random.int (List.length answer) in
     begin
         num_val := Array.fold_right (+) num_arr 0
         ; assert ((!num_val) = (Array.length num_arr) * (Array.get num_arr 0))
@@ -85,6 +87,28 @@ let run_intro (rsrc_path, opts_rec) =
                     (Util.mkString string_of_int lst) @@ 
                     (Util.mkString string_of_int @@ [9;9;9;9] @ lst)
                 )
+        
+        ; print_endline (String.make 40 '#')
+        ; printf "Classic.pascaltri_add %d: %s\n" 5 (Util.mkString 
+            (fun xs -> Util.mkString string_of_int xs)
+            (Classic.pascaltri_add 5))
+        ; print_string @@ Util.mkString_nested ("", " ", "\n") string_of_int 
+            (Classic.pascaltri_add 5)
+        
+        ; printf "Classic.hanoi_moves (%d, %d, %d) %d: %s\n" 1 2 3 4
+            (Util.mkString (fun (p1, p2) -> "(" ^ string_of_int p1 ^ ", " 
+            ^ string_of_int p2 ^ ")")
+            (match (Classic.hanoi_moves (1, 2, 3) 4) with | res, _, _ -> res))
+        ; printf "%s\n" (Util.mkString (fun (moves, pegs) -> 
+            "\n(" ^ moves ^ ", " ^ (Util.mkString (Util.mkString 
+            string_of_int) pegs) ^ ")")
+            (match (Classic.hanoi_moves (1, 2, 3) 4) with | _, _, mov -> mov))
+        
+        ; printf "Classic.nqueens_grid %d answer: %s\n" 8
+            (Util.mkString (fun (h, t) -> "(" ^ string_of_int h ^ ", " 
+            ^ string_of_int t ^ ")") ((List.nth answer queens_ndx)))
+        ; print_string @@ Util.mkString_nested ("", "-", "\n") (fun x -> x)
+            (Classic.nqueens_grid 8 (List.nth answer queens_ndx))
         
         ; print_endline (String.make 40 '#')
         ; printf "person1#get_age: %d\n" person1#get_age
