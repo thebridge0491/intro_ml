@@ -1,0 +1,163 @@
+#========================================
+#----------classic functions----------
+
+# square(b) = expt(b, 2)
+expt(b, n) = b ** n = {1                 , if 1 > n}
+                      {expt(b, n - 1) * b}
+fast_expt(b, n) = b ** n = {1                       , if 1 > n}
+                           {fast_expt(b, n - 1) * b , if n is odd}
+                           {fast_expt(b, n / 2) ** 2, if n is even}
+
+# sum_to(hi, lo) = numseq_math((+), hi, lo)
+# fact(n) = numseq_math((*), n, 1)
+numseq_math(op, hi, lo) = {0, if (op = (-) or op = (+)) and lo > hi}
+                          {1, if lo > hi}
+                          {hi op numseq_math(op, hi - 1, lo)}
+sum_to(hi, lo) = {0                      , if lo > hi}
+                 {hi + sum_to(hi - 1, lo)}
+fact(n) = n! = {1              , if 1 > n}
+               {n * fact(n - 1)}
+
+fib(n) = {n                      , if 2 > n}
+         {fib(n - 2) + fib(n - 1), if 1 < n}
+
+# Pascal's triangle elements (for rows 0..n & cols of row 0..row)
+# pascaltri(row, col) = C(row, col) --> C(n, k) = n! / (k! * (n - k)!)
+pascaltri(row, col, cur=[1]) =
+	{nothing                              , if col > len(cur)}
+    {cur[col]                             , if 0 = row}
+    {pascaltri(row - 1, col, map2((+), [0] + cur, cur + [0]))}
+
+# Euclidean division: a = q*b + r, where 0 <= r < |b|
+quot(a, b) = q = {floor( (a - r) / b), 0 <= r < |b|}
+rem(a, b) = r = {a - (q * b), 0 <= r < |b|}
+
+div(a, b) = {q = floor(a / b)  , if b > 0}
+            {q = ceiling(a / b), if b < 0}
+mod(a, b) = {a - (floor(a / b) * b)  , if b > 0}
+            {a - (ceiling(a / b) * b), if b < 0}
+
+# Euclidean GCD algorithm - m = q*n + r, gcd(m, n) = gcd(n, m % n)
+gcd(m, n) = {m            , if 0 = n}
+            {gcd(n, m % n)}
+lcm(m, n) = {(m * n) / gcd(m, n)}
+
+# base 10 to b expansion (base_expand(b, n) = n_(b) = a)
+base_expand(b, n) = {nothing                                 , if 1 > n}
+                    {base_expand(b, floor(n / b)) ... (n % b)}
+base b to 10 (base_to10(b, nums) = (?*b**(k) + ?*b**(k-1) + .. + ?*b + ?)_10)
+
+range_update(func, hi, lo) = {[]                   , if lo exceeds hi}
+                             {[lo] + range_update(func, hi, func(lo))}
+range_step(step, start, stop) = {[]                  , if start exceeds stop}
+                                {[start] + range_step(step, start + 1, stop)}
+
+compose function from 2 or more functions - compose(f, g)(x) = f(g(x))
+
+#========================================
+#----------sequence ops----------
+
+tabulate(func, cnt) = {[]                           , if 1 > cnt}
+                      {tabulate(func, cnt - 1) + [func(cnt - 1)]}
+
+length(xs) = {0                 , if [] = xs}
+             {length(xs[1:]) + 1}
+nth(idx, xs) = {nothing             , if [] = xs}
+               {xs[0]               , if 1 > idx}
+               {nth(idx - 1, xs[1:])}
+
+# index(data, xs) = index_find(data, xs)[0]
+# find(data, xs) = index_find(data, xs)[1]
+index_find(data, xs, idx=0) = {(-1, nothing) , if [] = xs}
+                              {(idx, xs[idx]), if data = xs[idx]}
+                              {index_find(data, xs[idx + 1:], idx + 1)}
+index(data, xs, idx=0) = {-1                       , if [] = xs}
+                         {idx                      , if data = xs[idx]}
+                         {index(data, xs[idx + 1:]), idx + 1}
+find(data, xs, idx=0) = {nothing                , if [] = xs}
+                        {xs[idx]                , if data = xs[idx]}
+                        {find(data, xs[idx + 1:], idx + 1)}
+
+minmax(xs) = min_max(lo=xs[0], hi=xs[0], rst=xs[1:]) =
+	{(lo, hi), if 2 > len(rst)}
+	{min_max(rst[0], hi, rst[1:]), if rst[0] < lo}
+	{min_max(lo, rst[0], rst[1:]), if rst[0] > hi}
+	{min_max(lo, hi, rst[1:])}
+min(xs) = minmax(xs)[0]
+max(xs) = minmax(xs)[1]
+
+reverse(xs) = {[]                       , if [] = xs}
+              {reverse(xs[1:]) + [xs[0]]}
+copy_of(xs) = {[]                       , if [] = xs}
+              {[xs[0]] + copy_of(xs[1:])}
+
+# take(num, xs) = split_at(num, xs)[0]
+# drop(num, xs) = split_at(num, xs)[1]
+split_at(num, xs, acc=[]) = {(acc, xs), if [] = xs or 1 > num}
+                            {split_at(num - 1, xs[1:], acc + [xs[0]])}
+take(num, xs) = {[]                              , if [] = xs or 1 > num}
+                {[xs[0]] + take(num - 1, xs[1:]))}
+drop(num, xs) = {xs                    , if [] = xs or 1 > num}
+                {drop(num - 1, xs[1:]))}
+
+# any(pred, xs) = any_all(pred, xs)[0]
+# all(pred, xs) = any_all(pred, xs)[1]
+any_all(pred, xs) =
+    {(false, true)                                   , if [] = xs}
+    {(pred(xs[0]) or any_all(pred, xs[1:])[0],
+                        pred(xs[0]) and any_all(pred, xs[1:])[1])}
+any(pred, xs) = {false                            , if [] = xs}
+                {pred(xs[0]) or any(pred, xs[1:]))}
+all(pred, xs) = {true                              , if [] = xs}
+                {pred(xs[0]) and all(pred, xs[1:]))}
+
+map(func, xs) = {[]                                , if [] = xs}
+                {[func(xs[0])] + map(func, xs[1:]))}
+foreach(func, xs) = {nothing                             , if [] = xs}
+                    {func(xs[0]) ; foreach(func, xs[1:]))}
+
+# filter(pred, xs) = partition(pred, xs)[0]
+# remove(pred, xs) = partition(pred, xs)[1]
+partition(pred, xs, acc=([], [])) = 
+    {acc, if [] = xs}
+    {partition(pred, xs[1:], (acc[0] + [xs[0]], acc[1])), if pred(xs[0])}
+    {partition(pred, xs[1:], (acc[0], acc[1] + [xs[0]]))}
+filter(pred, xs) = {[]                             , if [] = xs}
+                   {[xs[0]] + filter(pred, xs[1:])), if pred(xs[0])}
+                   {filter(pred, xs[1:]))          }
+remove(pred, xs) = {[]                             , if [] = xs}
+                   {[xs[0]] + remove(pred, xs[1:])), if not pred(xs[0])}
+                   {remove(pred, xs[1:]))          }
+
+foldl(corp, init, xs) = {init                         , if [] = xs}
+                        {foldl(corp, corp(init, xs[0]), xs[1:])}
+foldr(proc, xs, init) = {init                          , if [] = xs}
+                        {proc(xs[0], foldr(proc, xs[1:], init))}
+
+unfoldr(func, seed) = {[]                       , if func(seed) = nothing}
+                      {unfoldr(func, func(seed)[1]) + [func(seed)[0]]}
+unfoldl(func, seed) = {[]                       , if func(seed) = nothing}
+                      {[func(seed)[0]] + unfoldl(func, func(seed)[1])}
+
+is_ordered(xs, cmp=(<=)) = {true                  , if 2 > len(xs)}
+                           {xs[0] cmp xs[1] and is_ordered(xs[1:])}
+
+append(xs, ys) = {ys                          , if [] = xs}
+                 {[xs[0]] + append(xs[1:], ys)}
+interleave(xs, ys) = {ys                              , if [] = xs}
+                     {[xs[0]] + interleave(ys, xs[1:])}
+
+map2(func, xs, ys) = {[]                        , if [] = xs or [] = ys}
+                     {[func(xs[0], ys[0])] + map2(func, xs[1:], ys[1:])}
+
+# zip(xs, ys) = map2((,), xs, ys)
+zip(xs, ys) = {[]             , if [] = xs or [] = ys}
+              {[(xs[0], ys[0])] + zip(xs[1:], ys[1:])}
+unzip(zs) = {[[], []]                                   , if [] = zs}
+            {([zs[0][0]] + unzip(zs[1:])[0], [zs[0][1]] + unzip(zs[1:])[1])}
+
+concat(nlst) = {[]                        , if [] = nlst}
+               {nlst[0] + concat(nlst[1:])}
+flatten(nlst) = {[], if [] = nlst}
+                {flatten(nlst[0]) + flatten(nlst[1:]), if nlst[0] is list}
+                {[nlst[0]] + flatten(nlst[1:])}
