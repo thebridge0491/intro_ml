@@ -283,3 +283,6 @@ let concat_i nlsts = match nlsts with
 let rec concat_r nlsts = match nlsts with
     | [] -> []
     | x::xs -> x @ (concat_r xs)
+
+
+include Practice_Sequenceops_Hiorder

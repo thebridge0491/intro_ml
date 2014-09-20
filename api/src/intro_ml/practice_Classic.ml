@@ -166,3 +166,4 @@ let compose1 f g = (fun x -> f (g x))
 
 
 include Practice_Classic_Puzzles
+include Practice_Classic_Hiorder

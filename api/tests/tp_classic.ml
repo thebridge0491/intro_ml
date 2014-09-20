@@ -18,14 +18,14 @@ let prop_square arbFlt = Q.(Test.make ~count:100 arbFlt
 	(fun n -> 
 		let ans = n ** 2.0 in
 		List.fold_left (fun a f -> a && Util.in_epsilon ~tolerance:(epsilon *. ans) ans (f n))
-			true [square_r; square_i]))
+			true [square_r; square_i; square_f; square_u]))
 
 let prop_expt arb2Flts = Q.(Test.make ~count:100 arb2Flts
 	~name:"expt b n == b ** n" 
 	(fun (b, n) -> 
 		let ans = b ** n in
 		List.fold_left (fun a f -> a && Util.in_epsilon ~tolerance:(epsilon *. ans) ans (f b n))
-			true [expt_r; expt_i]))
+			true [expt_r; expt_i; expt_f; expt_u; fast_expt_r; fast_expt_i]))
 
 let prop_sum arb2Longs = Q.(Test.make ~count:100 arb2Longs
 	~name:"sum hi lo == List.sum [lo -- hi]" 
@@ -37,7 +37,7 @@ let prop_sum arb2Longs = Q.(Test.make ~count:100 arb2Longs
 					@@ Int64.to_int hi - Int64.to_int lo)
 			| _ -> 0L in
 		List.fold_left (fun a f -> a && f hi lo = ans) true 
-			[sum_to_r; sum_to_i]))
+			[sum_to_r; sum_to_i; sum_to_f; sum_to_u]))
 
 let prop_fact arbLong = Q.(Test.make ~count:100 arbLong
 	~name:"fact n == List.product [1 -- n]" 
@@ -45,7 +45,7 @@ let prop_fact arbLong = Q.(Test.make ~count:100 arbLong
 		let ans = List.fold_left Int64.mul 1L @@
 			List.map Int64.of_int (Util.range_cnt ~start:1 @@ Int64.to_int n) in
 		List.fold_left (fun a f -> a && f n = ans) true 
-			[fact_r; fact_i]))
+			[fact_r; fact_i; fact_f; fact_u]))
 
 let prop_fib arbInt = Q.(Test.make ~count:100 arbInt
 	~name:"fib n == ?? n"
@@ -53,7 +53,7 @@ let prop_fib arbInt = Q.(Test.make ~count:100 arbInt
 		let ans = snd @@ List.fold_left (fun (s0, s1) _ -> (s0 + s1, s0)) 
 			(0, 1) (Util.range_cnt (n + 1)) in
 		List.fold_left (fun a f -> a && f n = ans) true 
-			[fib_r; fib_i]))
+			[fib_r; fib_i; fib_f; fib_u]))
 
 let prop_pascaltri arbInt = Q.(Test.make ~count:100 arbInt
 	~name:"pascaltri rows == ?? rows"
@@ -65,7 +65,7 @@ let prop_pascaltri arbInt = Q.(Test.make ~count:100 arbInt
 		List.fold_left (fun a f -> a && validNumRows (f rows) &&
 			fst @@ List.fold_left (fun (a1, n) r -> (a1 && validLenRow n r
 			&& validSumRow n r, n + 1)) (true, 0) (f rows)) true 
-			[pascaltri_mult; pascaltri_add]))
+			[pascaltri_mult; pascaltri_add; pascaltri_f; pascaltri_u]))
 
 let prop_quot_rem arb2Ints = Q.(Test.make ~count:100 arb2Ints
 	~name:"quot_rem m n == quotRem m n"
@@ -92,7 +92,8 @@ let prop_gcd_lcm arbInts = Q.(Test.make ~count:100 arbInts
 				m ms in
 			List.fold_left (fun a (fnG, fnL) -> a && fnG mss = ansG && 
 				fnL mss = ansL) true 
-				[(gcd_r, lcm_r); (gcd_i, lcm_i)]
+				[(gcd_r, lcm_r); (gcd_i, lcm_i); (gcd_f, lcm_f)
+				; (gcd_u, lcm_u)]
 		| _ -> true))
 
 let prop_base_expand arb2Ints = Q.(Test.make ~count:100 arb2Ints
@@ -104,7 +105,7 @@ let prop_base_expand arb2Ints = Q.(Test.make ~count:100 arb2Ints
 			@@ Util.range_cnt ((truncate @@ log (float_of_int n) /. 
 				log (float_of_int b)) + 1) in
 		List.fold_left (fun a f -> a && f b n = ans) true 
-			[base_expand_r; base_expand_i]))
+			[base_expand_r; base_expand_i; base_expand_f; base_expand_u]))
 
 let prop_base_to10 b arbInts = Q.(Test.make ~count:100 arbInts
 	~name:(Printf.sprintf "base_to10 %d n == ?? %d n" b b)
@@ -113,7 +114,7 @@ let prop_base_to10 b arbInts = Q.(Test.make ~count:100 arbInts
 			(h + 1, t + (e * (truncate (float_of_int b ** float_of_int h)))))
 			xss (0, 0) in
 		List.fold_left (fun a f -> a && f b xss = ans) true 
-			[base_to10_r; base_to10_i]))
+			[base_to10_r; base_to10_i; base_to10_f; base_to10_u]))
 
 let prop_range arb2Ints = Q.(Test.make ~count:100 arb2Ints
 	~name:"range start stop == [start..stop]"
@@ -125,7 +126,9 @@ let prop_range arb2Ints = Q.(Test.make ~count:100 arb2Ints
 		List.fold_left (fun a (fnStep, fnRg) -> a && fnRg start stop = ans
 			&& fnStep start = List.rev ans) true 
 			[(range_step_r ~step:(-1) ~start:stop, range_r)
-				; (range_step_i ~step:(-1) ~start:stop, range_i)]))
+				; (range_step_i ~step:(-1) ~start:stop, range_i)
+				; (range_step_f ~step:(-1) ~start:stop, range_f)
+				; (range_step_u ~step:(-1) ~start:stop, range_u)]))
 
 let prop_composeInt f g arbInt = Q.(Test.make ~count:100 arbInt
 	~name:"composeInt f g x == f g x"

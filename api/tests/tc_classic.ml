@@ -15,7 +15,8 @@ let epsilon = 0.001
 let test_square _ = List.iter (fun (func_a, n) ->
     assert_equal (n ** 2.0) (func_a n)
     ) @@ List.flatten @@ List.map (fun f ->
-    	List.map (fun n -> (f, n)) [2.0; 11.0; 20.0]) [square_r; square_i]
+    	List.map (fun n -> (f, n)) [2.0; 11.0; 20.0]) [square_r; square_i
+    	; square_f; square_u]
 
 let test_expt _ = List.iter (fun (func_a, b, n) ->
     (* assert_equal (truncate (b ** n)) (func_a b n) *)
@@ -26,27 +27,29 @@ let test_expt _ = List.iter (fun (func_a, b, n) ->
         b <- [2.0; 11.0; 20.0] ; n <- [3.0; 6.0; 10.0]] *) 
     ) @@ List.flatten @@ List.flatten @@ List.map (fun f ->
     	List.map (fun b -> List.map (fun n -> (f, b, n))
-    	[3.0; 6.0; 10.0]) [2.0; 11.0; 20.0]) [expt_r; expt_i]
+    	[3.0; 6.0; 10.0]) [2.0; 11.0; 20.0]) [expt_r; expt_i; expt_f
+			; expt_u; fast_expt_r; fast_expt_i]
 
 let test_sum_to _ = List.iter (fun func_a ->
     assert_equal 15L (func_a 5L 0L) ; assert_equal 75L (func_a 15L 10L)
-    ) [sum_to_r; sum_to_i]
+    ) [sum_to_r; sum_to_i; sum_to_f; sum_to_u]
 
 let test_fact _ = List.iter (fun (func_a, n) ->
     assert_equal (List.fold_left (fun a e -> Int64.mul a e) 1L
         (List.map Int64.of_int (Util.range_cnt ~start:1 @@ Int64.to_int n))) 
         (func_a n)
     ) @@ List.flatten @@ List.map (fun f ->
-    	List.map (fun n -> (f, n)) [0L; 9L; 18L]) [fact_r; fact_i]
+    	List.map (fun n -> (f, n)) [0L; 9L; 18L]) [fact_r; fact_i; fact_f
+    	; fact_u]
 
 let test_fib _ = List.iter (fun func_a -> assert_equal 13 (func_a 7))
-	[fib_r; fib_i]
+	[fib_r; fib_i; fib_f; fib_u]
 
 let test_pascaltri _ = 
     let res = [[1]; [1; 1]; [1; 2; 1]; [1; 3; 3; 1];
         [1; 4; 6; 4; 1]; [1; 5; 10; 10; 5; 1]] in
     List.iter (fun func_a -> assert_equal res (func_a 5))
-    	[pascaltri_mult; pascaltri_add]
+    	[pascaltri_mult; pascaltri_add; pascaltri_f; pascaltri_u]
 
 let test_quot_rem _ = List.iter (fun (a, b) -> 
     assert_equal (a / b) (quot_m a b)
@@ -66,17 +69,17 @@ let test_gcd_lcm _ = List.iter (fun func_tup ->
     ; assert_equal 4 ((fst func_tup) [24; 16; 12])
     ; assert_equal 48 ((snd func_tup) [24; 16])
     ; assert_equal 96 ((snd func_tup) [24; 16; 32])
-    ) [(gcd_r, lcm_r); (gcd_i, lcm_i)]
+    ) [(gcd_r, lcm_r); (gcd_i, lcm_i); (gcd_f, lcm_f); (gcd_u, lcm_u)]
 
 let test_base_expand _ = List.iter (fun func_a ->
     assert_equal [1; 0; 1; 1] (func_a 2 11)
     ; assert_equal [1; 1; 0; 1] (func_a 4 81)
-    ) [base_expand_r; base_expand_i]
+    ) [base_expand_r; base_expand_i; base_expand_f; base_expand_u]
 
 let test_base_to10 _ = List.iter (fun func_a ->
     assert_equal 11 (func_a 2 [1; 0; 1; 1])
     ; assert_equal 81 (func_a 4 [1; 1; 0; 1])
-    ) [base_to10_r; base_to10_i]
+    ) [base_to10_r; base_to10_i; base_to10_f; base_to10_u]
 
 let test_range _ = 
 	let (lst, revlst) = (Util.range_cnt 5, List.rev @@ Util.range_cnt 5) in
@@ -84,7 +87,9 @@ let test_range _ =
 		assert_equal lst (fnRg 0 4)
 		; assert_equal revlst (fnStep 0)
     ) [(range_step_r ~step:(-1) ~start:4, range_r)
-		; (range_step_i ~step:(-1) ~start:4, range_i)]
+		; (range_step_i ~step:(-1) ~start:4, range_i)
+		; (range_step_f ~step:(-1) ~start:4, range_f)
+		; (range_step_u ~step:(-1) ~start:4, range_u)]
 
 let test_compose _ = 
     assert_equal ~cmp: (cmp_float ~epsilon: 0.0001) 2.0 

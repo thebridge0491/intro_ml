@@ -40,6 +40,44 @@ val range_r : int -> int -> int list
 val compose1    : ('a -> 'b) -> ('c -> 'a) -> ('c -> 'b)
 
 
+val square_f  : float -> float
+val expt_f  : float -> float -> float
+
+val sum_to_f    : int64 -> int64 -> int64
+val fact_f  : int64 -> int64
+
+val fib_f   : int -> int
+val pascaltri_f   : int -> int list list
+
+val gcd_f   : int list -> int
+val lcm_f   : int list -> int
+
+val base_expand_f : int -> int -> int list
+val base_to10_f : int -> int list -> int
+
+val range_step_f  : ?step:(int) -> ?start:(int) -> int -> int list
+val range_f : int -> int -> int list
+
+
+val square_u  : float -> float
+val expt_u  : float -> float -> float
+
+val sum_to_u    : int64 -> int64 -> int64
+val fact_u  : int64 -> int64
+
+val fib_u   : int -> int
+val pascaltri_u   : int -> int list list
+
+val gcd_u   : int list -> int
+val lcm_u   : int list -> int
+
+val base_expand_u : int -> int -> int list
+val base_to10_u : int -> int list -> int
+
+val range_step_u  : ?step:(int) -> ?start:(int) -> int -> int list
+val range_u : int -> int -> int list
+
+
 val hanoi   : (int * int * int) -> int -> (int * int) list
 val hanoi_moves : (int * int * int) -> int -> ((int * int) list * string list
     * (string * int list list) list)

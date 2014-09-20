@@ -41,7 +41,9 @@ open BatteriesThread ;;           (* open Batteries ;; *) *)
 
 #require "intro_ml.util" ;;
 
+#mod_use "intro_ml/practice_Sequenceops_Hiorder.ml" ;;
 #mod_use "intro_ml/practice_Sequenceops.ml" ;;
+#mod_use "intro_ml/practice_Classic_Hiorder.ml" ;;
 #mod_use "intro_ml/practice_Classic_Puzzles.ml" ;;
 #mod_use "intro_ml/practice_Classic.ml" ;;
 #mod_use "intro_ml/practice.ml" ;;

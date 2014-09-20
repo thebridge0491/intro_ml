@@ -1,6 +1,8 @@
 module Classic = Practice_Classic
 module Sequenceops = Practice_Sequenceops
 module Classic_Puzzles = Practice_Classic_Puzzles
+module Classic_Hiorder = Practice_Classic_Hiorder
+module Sequenceops_Hiorder = Practice_Sequenceops_Hiorder
 
 
 let lib_main argv =
