@@ -84,3 +84,25 @@ val hanoi_moves : (int * int * int) -> int -> ((int * int) list * string list
 
 val nqueens : int -> (int * int) list list
 val nqueens_grid : int -> (int * int) list -> string list list
+
+
+val squares_strm : unit -> float Stream.t
+val expts_strm : float -> float Stream.t
+
+val sums_strm : int64 -> int64 Stream.t
+val facts_strm : unit -> int64 Stream.t
+
+val fibs_strm : unit -> int Stream.t
+
+val pascalrows_strm : unit -> int list Stream.t
+
+
+val squares_u : unit -> float BatLazyList.t
+val expts_u : float -> float BatLazyList.t
+
+val sums_u : int64 -> int64 BatLazyList.t
+val facts_u : unit -> int64 BatLazyList.t
+
+val fibs_u : unit -> int BatLazyList.t
+
+val pascalrows_u : unit -> int list BatLazyList.t

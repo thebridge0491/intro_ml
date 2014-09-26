@@ -1,10 +1,10 @@
 # OASIS_START
-# DO NOT EDIT (digest: 9109d892e41cf05436a1bf4cf2b56a60)
+# DO NOT EDIT (digest: 41e077849e34071d3510de4f4f483f16)
 package "practice" (
  version = "0.1.0"
  description = "Practice sub-package for OCaml Intro examples project."
  directory = "practice"
- requires = "unix num str bolt bisect intro_ml.util"
+ requires = "unix num str bolt bisect batteries intro_ml.util"
  archive(byte) = "intro_ml.practice.cma"
  archive(byte, plugin) = "intro_ml.practice.cma"
  archive(native) = "intro_ml.practice.cmxa"
