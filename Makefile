@@ -7,13 +7,10 @@ help:
 parent = intro_ml
 SUBDIRS = common foreignc api app
 
-.PHONY: configure all build help clean test uninstall install
-configure: $(SUBDIRS) ## configure [OPTS=""]
-	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ $(CONFIGUREFLAGS) ; done
+.PHONY: all build help clean test uninstall install
 help: $(SUBDIRS)
 	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ ; done
 	@echo "##### Top-level multiproject: $(parent) #####"
-	@echo "       $(MAKE) [SUBDIRS="$(SUBDIRS)"] configure [OPTS=??]"
 	@echo "Usage: $(MAKE) [SUBDIRS="$(SUBDIRS)"] [target]"
 all build test uninstall install: $(SUBDIRS)
 	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ ; done
@@ -30,7 +27,7 @@ dist: $(SUBDIRS)
 	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
 #	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
 	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
-	
+
 	-@for fmt in `echo $(FMTS) | tr ',' ' '` ; do \
 		case $$fmt in \
 			zip) echo "### build/$(distdir).zip ###" ; \

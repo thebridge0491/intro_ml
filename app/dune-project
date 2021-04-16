@@ -1,0 +1,31 @@
+(lang dune 1.10)
+;(name intro)
+(generate_opam_files true)
+
+;(explicit_js_mode)
+(version 0.1.0)
+(license Apache-2.0)
+(authors thebridge0491)
+(maintainers thebridge0491)
+(source (uri git+https://bitbucket.org/thebridge0491/intro_ml.git))
+(bug_reports "https://bitbucket.org/thebridge0491/intro_ml")
+(homepage "https://bitbucket.org/thebridge0491/intro_ml")
+(documentation "https://bitbucket.org/thebridge0491/intro_ml")
+
+(package
+	(name intro_ml-intro)
+	(tags (demo intro app))
+	(depopts
+		(odoc :build)
+		)
+	(depends
+		(dune (>= 1.10))
+    (bolt (>= 1.2))
+    (yojson (>= 1.2))
+    (ezjsonm (>= 0.4))
+    (batteries (>= 2.2.0))
+    (intro_ml-util (>= 0.1.0))
+    (intro_ml-practice (>= 0.1.0))
+		)
+	(synopsis "Main app sub-package for OCaml Intro examples project.")
+	)

@@ -34,7 +34,11 @@ dist/*
 *__pycache__*
 .cache/*
 .hypothesis/*
-.jip/*
+.jip*/*
 javalib/*
 
+
 _build/*
+#setup.data
+.merlin
+*.install

@@ -1,0 +1,9 @@
+(library
+	(public_name intro_ml-practice)
+	(name practice)
+	;(private_modules )
+	(libraries unix num str bolt intro_ml-util)
+	(synopsis "Practice sub-package for OCaml Intro examples project.")
+	(ocamlopt_flags -thread -w +a-4 -w -a-27)
+	(ocamlc_flags -thread -w +a-4 -w -a-27)
+	)

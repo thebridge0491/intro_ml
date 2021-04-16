@@ -98,4 +98,6 @@ Package.resolved
 *.xcworkspace
 
 
-setup.data
+#setup.data
+.merlin
+*.install

@@ -5,9 +5,9 @@ let daysOfWeek = [|"Sun"; "Mon"; "Tue"; "Wed"; "Thu"; "Fri"; "Sat"|]
 
 let monthNames = [|"Jan"; "Feb"; "Mar"; "Apr"; "May"; "Jun"; "Jul"; "Aug"; "Sep"; "Oct"; "Nov"; "Dec"|]
 
-let dateToString dt1 = Printf.sprintf "%s %s %02d %02d:%02d:%02d %04d" 
-    daysOfWeek.(dt1.Unix.tm_wday) monthNames.(dt1.Unix.tm_mon) 
-    dt1.Unix.tm_mday dt1.Unix.tm_hour dt1.Unix.tm_min dt1.Unix.tm_sec 
+let dateToString dt1 = Printf.sprintf "%s %s %02d %02d:%02d:%02d %04d"
+    daysOfWeek.(dt1.Unix.tm_wday) monthNames.(dt1.Unix.tm_mon)
+    dt1.Unix.tm_mday dt1.Unix.tm_hour dt1.Unix.tm_min dt1.Unix.tm_sec
     (dt1.Unix.tm_year + 1900)
 
 let inicfg_tostring ini =
@@ -15,12 +15,12 @@ let inicfg_tostring ini =
         let attr_vals = ini#attrs sect in
         (List.map (fun attr -> (String.concat "" [sect;":";attr],
             ini#getval sect attr)) attr_vals) :: acc) [] ini#sects in
-    List.fold_right (fun el acc -> (List.fold_right (fun (a,b) acc -> 
+    List.fold_right (fun el acc -> (List.fold_right (fun (a,b) acc ->
         String.concat "" ["(";a;",";b;")";", ";acc]) el "\n") ^ acc) items ""
 
 let mkString_init (beg, sep, stop) el_fmt lst = match lst with
     |   [] -> beg ^ stop
-    |   _ -> beg ^ (List.fold_right (fun el acc -> (el_fmt el) ^ 
+    |   _ -> beg ^ (List.fold_right (fun el acc -> (el_fmt el) ^
         (if "" = acc then "" else sep) ^ acc) lst "") ^ stop
 
 let mkString el_fmt lst = mkString_init ("[", "; ", "]") el_fmt lst
@@ -30,10 +30,10 @@ let mkString_nested (beg, sep, stop) el_fmt nlsts = match nlsts with
     |   _ -> (List.fold_left (fun acc el -> acc ^ (mkString_init ("",sep,"\n")
         el_fmt el)) beg nlsts) ^ stop
 
-let range_cnt ?(start=0) cnt = 
+let range_cnt ?(start=0) cnt =
     Array.to_list @@ Array.init cnt (fun e -> e + start)
 
-let queue_ofList lst = 
+let queue_ofList lst =
     let queue = Queue.create ()
 in (List.iter (fun e -> Queue.add e queue) lst ; queue)
 

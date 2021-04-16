@@ -5,10 +5,10 @@
     -- run REPL, load script, & run --
     BOLT_CONFIG=bolt.conf [ocaml | utop] -I `ocamlfind query bolt` -init main.sh
     # Main.main ([|Sys.argv.(2); arg1; argN|])
-    
+
     -- help/info tools in REPL --
     #list, #quit, #show, #trace, #untrace[_all]
-    
+
     -- show module version 4.01  (version 4.02 and above)
     module Malias = List ;;       (#show List ;;)      -- for modules
     module Falias = Set.Make ;;   (#show Set.Make ;;)  -- for functors
@@ -29,7 +29,7 @@ let run_intro (rsrc_path, opts_rec) =
     let time_in = Unix.gettimeofday() in
     let greet_path = rsrc_path ^ "/greet.txt" in
     let (ch, delay_secs, dt1) = (ref '\000', 2.5, Unix.localtime time_in) in
-    let user1 = ({User.name = opts_rec.Opts_record.user; 
+    let user1 = ({User.name = opts_rec.Opts_record.user;
 		num = opts_rec.Opts_record.num; time_in = time_in} : User.t) in
     let person1 = new Person.person "I. M. Computer" 32 in
     let (rexp, lst) = (Str.regexp_case_fold "^quit$", [2; 1; 0; 4; 3]) in
@@ -40,15 +40,15 @@ let run_intro (rsrc_path, opts_rec) =
     begin
         num_val := Array.fold_right (+) num_arr 0
         ; assert ((!num_val) = (Array.length num_arr) * (Array.get num_arr 0))
-        
+
         (* ; (fun () -> Unix.sleep (int_of_float delay_secs))*)
         ; ch := Intro.delay_char_r (fun () -> ignore (Unix.select [] [] []
             delay_secs); 0)
-        
+
         ; user1.User.num <- (if (0 = user1.User.num) then
             (Random.int 18) + 2 else user1.User.num)
-        
-        ; printf "%s %s to %s\n" 
+
+        ; printf "%s %s to %s\n"
             (if (Str.string_match rexp user1.User.name 0) then
                 "Good match: "
             else "Does not match: ") opts_rec.Opts_record.user "\"^quit$\""
@@ -60,56 +60,56 @@ let run_intro (rsrc_path, opts_rec) =
         ; printf "(program %s) Took %.2f seconds.\n" Sys.argv.(0)
             ((Unix.gettimeofday()) -. user1.User.time_in)
         ; print_endline (String.make 40 '#')
-        
+
         ; if opts_rec.Opts_record.isExpt2 then
             (printf "Classic.expt_i 2 %d: %s\n" user1.User.num
                 (string_of_float (Classic.expt_i 2.0 @@ float_of_int user1.User.num))
-            ; printf "Sequenceops.rev_i %s: %s\n" 
+            ; printf "Sequenceops.rev_i %s: %s\n"
                 (Util.mkString string_of_int lst)
                 (Util.mkString string_of_int (Sequenceops.rev_i lst))
-            ; printf "List.sort <lambda> %s %s: %s\n" 
-                (Util.mkString string_of_int [9;9;9;9]) 
-                (Util.mkString string_of_int lst) 
+            ; printf "List.sort <lambda> %s %s: %s\n"
+                (Util.mkString string_of_int [9;9;9;9])
+                (Util.mkString string_of_int lst)
                 (Util.mkString string_of_int @@
                 List.sort compare @@ [9;9;9;9] @ lst)
             )
             else
                 (printf "Classic.fact_i %d: %Ld\n" user1.User.num @@
                     Classic.fact_i (Int64.of_int user1.User.num)
-                ; printf "Sequenceops.findi_i <lambda> %s: %s\n" 
+                ; printf "Sequenceops.findi_i <lambda> %s: %s\n"
                     (Util.mkString string_of_int lst)
-                    (match (Util.option_get (-1) @@ 
+                    (match (Util.option_get (-1) @@
                         Sequenceops.findi_i (fun e -> e = 3) lst) with
                     |   (-1) -> "None"
                     |   idx -> sprintf "Some(%d)" idx)
-                ; printf "List.@ %s %s: %s\n" 
-                    (Util.mkString string_of_int [9;9;9;9]) 
-                    (Util.mkString string_of_int lst) @@ 
+                ; printf "List.@ %s %s: %s\n"
+                    (Util.mkString string_of_int [9;9;9;9])
+                    (Util.mkString string_of_int lst) @@
                     (Util.mkString string_of_int @@ [9;9;9;9] @ lst)
                 )
-        
+
         ; print_endline (String.make 40 '#')
-        ; printf "Classic.pascaltri_add %d: %s\n" 5 (Util.mkString 
+        ; printf "Classic.pascaltri_add %d: %s\n" 5 (Util.mkString
             (fun xs -> Util.mkString string_of_int xs)
             (Classic.pascaltri_add 5))
-        ; print_string @@ Util.mkString_nested ("", " ", "\n") string_of_int 
+        ; print_string @@ Util.mkString_nested ("", " ", "\n") string_of_int
             (Classic.pascaltri_add 5)
-        
+
         ; printf "Classic.hanoi_moves (%d, %d, %d) %d: %s\n" 1 2 3 4
-            (Util.mkString (fun (p1, p2) -> "(" ^ string_of_int p1 ^ ", " 
+            (Util.mkString (fun (p1, p2) -> "(" ^ string_of_int p1 ^ ", "
             ^ string_of_int p2 ^ ")")
             (match (Classic.hanoi_moves (1, 2, 3) 4) with | res, _, _ -> res))
-        ; printf "%s\n" (Util.mkString (fun (moves, pegs) -> 
-            "\n(" ^ moves ^ ", " ^ (Util.mkString (Util.mkString 
+        ; printf "%s\n" (Util.mkString (fun (moves, pegs) ->
+            "\n(" ^ moves ^ ", " ^ (Util.mkString (Util.mkString
             string_of_int) pegs) ^ ")")
             (match (Classic.hanoi_moves (1, 2, 3) 4) with | _, _, mov -> mov))
-        
+
         ; printf "Classic.nqueens_grid %d answer: %s\n" 8
-            (Util.mkString (fun (h, t) -> "(" ^ string_of_int h ^ ", " 
+            (Util.mkString (fun (h, t) -> "(" ^ string_of_int h ^ ", "
             ^ string_of_int t ^ ")") ((List.nth answer queens_ndx)))
         ; print_string @@ Util.mkString_nested ("", "-", "\n") (fun x -> x)
             (Classic.nqueens_grid 8 (List.nth answer queens_ndx))
-        
+
         ; print_endline (String.make 40 '#')
         ; printf "person1#get_age: %d\n" person1#get_age
         ; person1#set_age 33
@@ -118,7 +118,7 @@ let run_intro (rsrc_path, opts_rec) =
         ; print_endline (String.make 40 '#')
     end
 
-let usage_msg = sprintf "Usage: %s [-help][-u USER][-n NUM][-2]" 
+let usage_msg = sprintf "Usage: %s [-help][-u USER][-n NUM][-2]"
     Sys.argv.(0)
 let (user, num, isExpt2) = (ref "World", ref 0, ref false)
 
@@ -132,14 +132,14 @@ let parse_cmdopts args =
     Bolt.Logger.log "root" Bolt.Level.INFO "parse_cmdopts()"
     ; try
     begin
-        Arg.parse_argv args speclist (fun x -> raise (Arg.Bad ("Bad argument: " 
+        Arg.parse_argv args speclist (fun x -> raise (Arg.Bad ("Bad argument: "
             ^ x))) usage_msg
         ; {Opts_record.user = !user; num = !num; isExpt2 = !isExpt2}
     end
     with Arg.Help msg -> (printf "%s" msg ; exit 1)
         | Arg.Bad msg -> (printf "%s" msg ; exit 1)
 
-let main argv = 
+let main argv =
     let rsrc_path = try Sys.getenv "RSRC_PATH"
     with exc -> "resources" in
     let (ini_path, json_path) = (rsrc_path ^ "/prac.conf",
@@ -160,8 +160,8 @@ let main argv =
         , Ezjsonm.get_string @@ Ezjsonm.find jsonobj1 ["domain"]
         , Ezjsonm.get_string @@ Ezjsonm.find user1Lst1 ["name"]) *)
         ] in
-    List.iter (fun (t0, t1, t2) -> 
-        printf "config: {\%s}\n" t0
+    List.iter (fun (t0, t1, t2) ->
+        printf "config: {%s}\n" t0
         ; printf "domain: %s\n" t1
         ; printf "user1Name: %s\n\n" t2 ; ()) tup_lst
     ; run_intro (rsrc_path, opts_rec)
@@ -173,5 +173,5 @@ let (program, re) = (Sys.argv.(0), Str.regexp "main") in
         main (Sys.argv)
     with Not_found -> ()
 *)
-let () = 
+let () =
     if !Sys.interactive then () else main (Sys.argv) ;

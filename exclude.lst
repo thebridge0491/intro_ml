@@ -36,3 +36,9 @@ dist/*
 .hypothesis/*
 .jip*/*
 javalib/*
+
+
+_build/*
+#setup.data
+.merlin
+*.install

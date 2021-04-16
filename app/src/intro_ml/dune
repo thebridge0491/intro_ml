@@ -1,0 +1,8 @@
+(executable
+	(public_name Main-intro_ml-intro)
+	(name main)
+	;(private_modules )
+	(libraries unix num str threads bolt inifiles yojson ezjsonm intro_ml-util intro_ml-practice)
+	(ocamlopt_flags -thread -w +a-4 -w -a-27)
+	(ocamlc_flags -thread -w +a-4 -w -a-27)
+	)

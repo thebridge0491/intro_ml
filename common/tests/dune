@@ -1,0 +1,13 @@
+(test
+	(name ts_main)
+	(libraries unix num str oUnit qcheck intro_ml-util)
+	(ocamlopt_flags -thread -w +a-4 -w -a-27)
+	(ocamlc_flags -thread -w +a-4 -w -a-27)
+	(deps
+		ts_main.exe
+		)
+	(action
+		(run %{test}
+			)
+		)
+	)
