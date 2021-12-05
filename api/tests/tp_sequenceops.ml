@@ -24,14 +24,14 @@ let prop_tabulate func arbInt = Q.(Test.make ~count:100 arbInt
 		let ans = List.fold_right (fun e a -> func e :: a)
 			(Util.range_cnt n) [] in
 		List.fold_left (fun a f -> a && f func n = ans) true
-			[tabulate_r; tabulate_i]))
+			[tabulate_r; tabulate_i; tabulate_f; tabulate_u]))
 
 let prop_length arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"length == List.length"
 	(fun xs -> 
 		let ans = List.length xs in
 		List.fold_left (fun a f -> a && f xs = ans) true
-			[length_r; length_i]))
+			[length_r; length_i; length_f; length_u]))
 
 let prop_nth arbNXs = Q.(Test.make ~count:100 arbNXs
 	~name:"nth == List.nth"
@@ -39,7 +39,7 @@ let prop_nth arbNXs = Q.(Test.make ~count:100 arbNXs
 		let ans = match n < List.length xs with
 			| true -> Some (List.nth xs n) | _ -> None in
 		List.fold_left (fun a f -> a && f n xs = ans) true
-			[nth_r; nth_i]))
+			[nth_r; nth_i; nth_f; nth_u]))
 
 let prop_findi pred1 arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"findi == List.findi" 
@@ -49,7 +49,7 @@ let prop_findi pred1 arbXs = Q.(Test.make ~count:100 arbXs
 				| true -> (ndx + 1, Some ndx)
 				| _ -> (ndx + 1, idx)) (0, None) xs in
 		List.fold_left (fun a f -> a && f pred1 xs = ans) true 
-			[findi_r; findi_i]))
+			[findi_r; findi_i; findi_f; findi_u]))
 
 let prop_find pred1 arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"find == List.find"
@@ -59,7 +59,7 @@ let prop_find pred1 arbXs = Q.(Test.make ~count:100 arbXs
 				| true -> (ndx + 1, Some el)
 				| _ -> (ndx + 1, it)) (0, None) xs in
 		List.fold_left (fun a f -> a && f pred1 xs = ans) true 
-			[find_r; find_i]))
+			[find_r; find_i; find_f; find_u]))
 
 let prop_min_max arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"min_max == (List.min, List.max)"
@@ -68,21 +68,22 @@ let prop_min_max arbXs = Q.(Test.make ~count:100 arbXs
 		let ansMax = List.fold_left max (List.nth xs 0) xs in
 		List.fold_left (fun a (fMin, fMax) -> a && (fMin xs) = ansMin
 			&& (fMax xs) = ansMax) true
-			[(min_r, max_r); (min_i, max_i)]))
+			[(min_r, max_r); (min_i, max_i); (min_f, max_f)
+            ; (min_u, max_u)]))
 
 let prop_reverse arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"reverse == List.rev" 
 	(fun xs -> 
 		let ans = List.rev xs in
 		List.fold_left (fun a f -> a && f xs = ans) true 
-			[rev_r; rev_i]))
+			[rev_r; rev_i; rev_f; rev_u]))
 
 let prop_copy arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"copy == List.map id"
 	(fun xs -> 
 		let ans = List.map (fun e -> e) xs in
 		List.fold_left (fun a f -> a && f xs = ans) true 
-			[copy_r; copy_i]))
+			[copy_r; copy_i; copy_f; copy_u]))
 
 let prop_take_drop arbNXs = Q.(Test.make ~count:100 arbNXs
 	~name:"take_drop == (List.take, List.drop)"
@@ -93,7 +94,7 @@ let prop_take_drop arbNXs = Q.(Test.make ~count:100 arbNXs
 				| y::ys -> (y :: aT, ys)) ([], xs) (Util.range_cnt n) in
 		List.fold_left (fun a (fTake, fDrop) -> a && 
 			fTake n xs = List.rev ansTake && fDrop n xs = ansDrop) true
-			[(take_i, drop_i)]))
+			[(take_i, drop_i); (take_f, drop_f); (take_u, drop_u)]))
 
 let prop_exists_for_all pred1 arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"exists_for_all == (List.exists, List.for_all)"
@@ -101,21 +102,22 @@ let prop_exists_for_all pred1 arbXs = Q.(Test.make ~count:100 arbXs
 		let (ansAny, ansAll) = (List.exists pred1 xs, List.for_all pred1 xs) in
 		List.fold_left (fun a (fAny, fAll) -> a && (fAny pred1 xs) = ansAny
 			&& (fAll pred1 xs) = ansAll) true 
-			[(exists_r, for_all_r); (exists_i, for_all_i)]))
+			[(exists_r, for_all_r); (exists_i, for_all_i)
+			; (exists_f, for_all_f); (exists_u, for_all_u)]))
 
 let prop_map proc arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"map == List.map"
 	(fun xs -> 
 		let ans = List.map proc xs in
 		List.fold_left (fun a f -> a && f proc xs = ans) true 
-			[map_r; map_i]))
+			[map_r; map_i; map_f; map_u]))
 
 let prop_iter proc arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"iter == List.iter"
 	(fun xs -> 
 		let ans = List.iter proc xs in
 		List.fold_left (fun a f -> a && f proc xs = ans) true 
-			[iter_r; iter_i]))
+			[iter_r; iter_i; iter_f; iter_u]))
 
 let prop_filter_remove pred1 arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"filter_remove == List.partition"
@@ -123,7 +125,8 @@ let prop_filter_remove pred1 arbXs = Q.(Test.make ~count:100 arbXs
 		let (ansF, ansR) = List.partition pred1 xs in
 		List.fold_left (fun a (fnF, fnR) -> a && (fnF pred1 xs) = ansF
 			&& (fnR pred1 xs) = ansR) true 
-			[(filter_r, remove_r); (filter_i, remove_i)]))
+			[(filter_r, remove_r); (filter_i, remove_i)
+			; (filter_f, remove_f); (filter_u, remove_u)]))
 
 let prop_fold_left corp init arbXs = Q.(Test.make ~count:100 arbXs
 	~name:"fold_left == List.fold_left"
@@ -166,14 +169,16 @@ let prop_isOrdered arbXs = Q.(Test.make ~count:100 arbXs
 			fnOrd (fun e -> e) xs = ansOrd
 			&& fnRevOrd (fun e -> e) xs = ansRevOrd) true 
 			[(is_ordered_r ~cmpfn:(<=), is_ordered_r ~cmpfn:(>=))
-				; (is_ordered_i ~cmpfn:(<=), is_ordered_i ~cmpfn:(>=))]))
+			; (is_ordered_i ~cmpfn:(<=), is_ordered_i ~cmpfn:(>=))
+			; (is_ordered_f ~cmpfn:(<=), is_ordered_f ~cmpfn:(>=))
+			; (is_ordered_u ~cmpfn:(<=), is_ordered_u ~cmpfn:(>=))]))
 
 let prop_append arbXsYs = Q.(Test.make ~count:100 arbXsYs
 	~name:"append == List.(@)"
 	(fun (xs, ys) -> 
 		let ans = xs @ ys in
 		List.fold_left (fun a f -> a && f xs ys = ans) true
-			[append_r; append_i]))
+			[append_r; append_i; append_f; append_u]))
 
 let prop_interleave arbXsYs = Q.(Test.make ~count:100 arbXsYs
 	~name:"interleave == ??"
@@ -184,7 +189,7 @@ let prop_interleave arbXsYs = Q.(Test.make ~count:100 arbXsYs
 			(take_i len_short ys) (drop_i len_short xs @ drop_i len_short ys, 
 				List.rev (take_i len_short xs)) in
 		List.fold_left (fun a f -> a && f xs ys = ans) true
-			[interleave_r; interleave_i]))
+			[interleave_r; interleave_i; interleave_f; interleave_u]))
 
 let prop_map2 proc2 arbXsYs = Q.(Test.make ~count:100 arbXsYs
 	~name:"map2 == List.map2"
@@ -194,7 +199,7 @@ let prop_map2 proc2 arbXsYs = Q.(Test.make ~count:100 arbXsYs
 		let ans = List.map2 proc2 (take_i len_short xs) 
 			(take_i len_short ys) in
 		List.fold_left (fun a f -> a && f proc2 xs ys = ans) true
-			[map2_r; map2_i]))
+			[map2_r; map2_i; map2_f; map2_u]))
 
 let prop_zip arbXsYs = Q.(Test.make ~count:100 arbXsYs
 	~name:"zip == List.combine"
@@ -204,21 +209,21 @@ let prop_zip arbXsYs = Q.(Test.make ~count:100 arbXsYs
 		let ans = List.combine (take_i len_short xs) 
 			(take_i len_short ys) in
 		List.fold_left (fun a f -> a && f xs ys = ans) true
-			[zip_r; zip_i]))
+			[zip_r; zip_i; zip_f; zip_u]))
 
 let prop_unzip arbTups = Q.(Test.make ~count:100 arbTups
 	~name:"unzip == List.split"
 	(fun tups -> 
 		let ans = List.split tups in
 		List.fold_left (fun a f -> a && f tups = ans) true
-			[unzip2_i]))
+			[unzip2_i; unzip2_f; unzip2_u]))
 
 let prop_concat arbNlst = Q.(Test.make ~count:100 arbNlst
 	~name:"concat == List.concat"
 	(fun nlst -> 
 		let ans = List.concat nlst in
 		List.fold_left (fun a f -> a && f nlst = ans) true
-			[concat_r; concat_i]))
+			[concat_r; concat_i; concat_f; concat_u]))
 
 
 let prop_unfold_right_range arbInt = 

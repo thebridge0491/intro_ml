@@ -1,0 +1,42 @@
+#========================================
+#----------classic streams (lazy sequences)----------
+
+# verify: squares()[11] = 121
+squares(lo=0) = [lo * lo] + squares(lo + 1)
+
+# verify: expts(10)[6] = 10 ** 6 = 1,000,000
+expts(b, a=1.0) = [a] + expts(b, a * b)
+
+# verify: sums(lo=-10)[5-(-10)] = -40
+sums(lo=0, a=0) = [a + lo] + sums(lo + 1, a + lo)
+
+# verify: facts()[9] = 362,880
+facts(n=0, a=1) = [a] + facts(n + 1, a * (n + 1))
+
+# verify: fibs()[10] = 55
+fibs(s0=0, s1=1) = [s0] + fibs(s1, s0 + s1)
+
+# verify: pascalrows()[5] = [1, 5, 10, 10, 5, 1]
+pascalrows(row=[1]) = [row] + pascalrows(map2((+), [0] + row, row + [0]))
+
+#========================================
+#----------variadic sequence functions----------
+
+# any_var(pred, nlst) = any_all(pred, nlst)[0]
+# all_var(pred, nlst) = any_all(pred, nlst)[1]
+any_all_var(pred, nlst) = 
+    {foldl((fun (a0, a1) els -> (a0 or pred(*els), a1 and pred(*els))), 
+        (false, true), zip(*nlst))}
+any_var(pred, nlst) = foldl((fun a els -> a or pred(*els)), false, zip(*nlst))
+all_var(pred, nlst) = foldl((fun a els -> a and pred(*els)), true, zip(*nlst))
+
+map_var(proc, nlst) = foldr((fun els a -> [proc(*els)] + a), [], zip(*nlst))
+foreach_var(proc, nlst) = foldr((fun els a -> proc(*els); a), nothing, zip(*nlst))
+
+foldl_var(corp, init, nlst) =
+    foldl((fun a els -> corp(a, *els)), init, zip(*nlst))
+foldr_var(proc, init, nlst) =
+    foldr((fun els a -> proc(*els, a)), init, zip(*nlst))
+
+append_var(nlst) = foldr((fun els a -> els + a), nlst, [])
+zip_var(nlst) = map_var([,..], *nlst)
