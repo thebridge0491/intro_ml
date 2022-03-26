@@ -1,0 +1,57 @@
+opam-version: "2.0"
+build: [
+  ## with build tool: ocamlbuild, make
+  #["sh" "-ex" "./configure.sh" "--prefix=$$PREFIX"] {! with-test}
+  #["sh" "-ex" "./configure.sh" "--prefix=$$PREFIX" "--enable-debug"] {with-test}
+
+  ## with build tool: oasis
+  #["ocaml" "setup.ml" "-configure" "--prefix" "%{prefix}%"] {! with-test}
+  #["ocaml" "setup.ml" "-configure" "--prefix" "%{prefix}%" "--enable-tests" "--enable-debug" "--enable-coverage" "--enable-docs"] {with-test}
+  
+  #[make "build"]
+  #[make "doc"] {with-doc}
+
+  ## with build tool: dune
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "build" "-p" name "@doc"] {with-doc}
+]
+#install: [make "install"]
+#remove: [make "uninstall"]
+run-test: [
+  ## with build tool: oasis, ocamlbuild, make
+  #[make "test"]
+  #[make "report"]
+  
+  ## with build tool: dune
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
+]
+#name: "{{name}}{{^name}}intro_ml-util{{/name}}"
+maintainer: "{{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}}>"
+authors: "{{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}}>"
+bug-reports: "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}"
+homepage: "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}"
+doc: "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}"
+license: "{{license}}{{^license}}Apache-2.0{{/license}}"
+version: "{{version}}{{^version}}0.1.0{{/version}}"
+dev-repo: "git+https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}.git"
+synopsis: "{{description}}{{^description}}Utilities sub-package for OCaml Intro examples project.{{/description}}"
+depends: [
+  "dune" {>= "1.10"}
+  "volt" {>= "1.2"}
+  "ocaml-inifiles" {>= "1.0"}
+  {{#executable}}
+  "yojson" {>= "1.2"}
+  "ezjsonm" {>= "0.4"}
+  {{/executable}}
+  #"ctypes" {>= "0.4"}
+  #"ctypes-foreign" {>= "0.4"}
+  "ounit2" {with-test & >= "2.2.0"}
+  "qcheck" {with-test & >= "0.13"}
+]
+depopts: [
+  "odoc" {with-doc & >= "1.5.0"}
+]
+#url {
+#  src: "file://$$PWD"
+#}

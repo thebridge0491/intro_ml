@@ -58,8 +58,8 @@ let prop_assocAddFlts = Q.(Test.make ~count:100
 (*let tprops = QCheck_runner.( >::: ) "Tp_new"
 	[prop_commutAddInts; prop_assocAddInts
 	]*)
-let tprops = OUnit.( >::: ) "Tp_new" (List.map 
-	(QCheck_runner.to_ounit_test ~verbose:true)
+let tprops = OUnit2.( >::: ) "Tp_new" (List.map 
+	(QCheck_runner.to_ounit2_test)
 	[prop_commutAddInts; prop_assocAddInts; prop_commutAddFlts
 	; prop_assocAddFlts; prop_revRev Q.(list genInts)
 	; prop_revId Q.(list genInts)

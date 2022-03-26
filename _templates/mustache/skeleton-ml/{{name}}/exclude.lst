@@ -37,4 +37,8 @@ dist/*
 .jip/*
 javalib/*
 
+
 _build/*
+#setup.data
+.merlin
+*.install

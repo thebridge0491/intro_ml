@@ -21,10 +21,14 @@ make build [test]
 [sudo] make install
 
 build example with oasis:
-cd <path>
-[oasis setup -setup-update none] 
+cd <path> [; oasis setup -setup-update none]
 ocaml setup.ml -configure --enable-tests [--prefix $PREFIX]
 opam pin add . ; opam install . [; ocaml setup.ml [-info] -install]
+
+build example with dune:
+cd <path> ; opam pin add [--with-test] .
+dune build [runtest -f]
+dune install
 
 ## Usage
 {{#executable}}

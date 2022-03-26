@@ -4,8 +4,13 @@
 # $* - basename (cur target)  $^ - name(s) (all depns)  $< - name (1st depn)
 # $@ - name (cur target)      $% - archive member name  $? - changed depns
 
-FMTS ?= tar.gz
+FMTS ?= tar.gz,zip
 distdir = $(proj)-$(version)
+
+build/$(distdir) : 
+	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
+#	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
+	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
 
 src/$(parent)/$(proj).cma :
 	-$(MLBUILD) $(ML_LFLAGS) $(ML_CFLAGS) $(ML_CCLib) $(ML_DllLib) $(ML_DllPath) $(mllibs_main) $@
@@ -39,21 +44,20 @@ uninstall install: ## [un]install artifacts
 	fi
 	-cat `opam config var lib`/$(parent)/*/META \
 		> `opam config var lib`/$(parent)/META
-	-ocamlfind list | grep $(parent) ; sleep 2
-dist: ## [FMTS="tar.gz"] archive source code
-	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
-#	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
-	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
-	
+	-opam list $(proj) ; sleep 3
+dist: | build/$(distdir) ## [FMTS="tar.gz,zip"] archive source code
 	-@for fmt in `echo $(FMTS) | tr ',' ' '` ; do \
 		case $$fmt in \
+			7z) echo "### build/$(distdir).7z ###" ; \
+				rm -f build/$(distdir).7z ; \
+				(cd build ; 7za a -t7z -mx=9 $(distdir).7z $(distdir)) ;; \
 			zip) echo "### build/$(distdir).zip ###" ; \
 				rm -f build/$(distdir).zip ; \
 				(cd build ; zip -9 -q -r $(distdir).zip $(distdir)) ;; \
-			*) tarext=`echo $$fmt | grep -e '^tar$$' -e '^tar.xz$$' -e '^tar.bz2$$' || echo tar.gz` ; \
+			*) tarext=`echo $$fmt | grep -e '^tar$$' -e '^tar.xz$$' -e '^tar.zst$$' -e '^tar.bz2$$' || echo tar.gz` ; \
 				echo "### build/$(distdir).$$tarext ###" ; \
 				rm -f build/$(distdir).$$tarext ; \
-				(cd build ; tar --posix -L -caf $(distdir).$$tarext $(distdir)) ;; \
+				(cd build ; tar --posix -h -caf $(distdir).$$tarext $(distdir)) ;; \
 		esac \
 	done
 	-@rm -r build/$(distdir)

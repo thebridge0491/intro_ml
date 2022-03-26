@@ -1,6 +1,6 @@
 #!/bin/sh
 # (*
-BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query bolt` -I src -I tests -I _build/src/swig -I _build/src/{{parent}}{{^parent}}intro_ml{{/parent}} $0 $@
+BOLT_CONFIG=resources/bolt_new.conf BISECT_FILE=_build/bisect_test exec ocaml -w +a-4 -safe-string -strict-sequence -short-paths -strict-formats -I `ocamlfind query bisect` -I `ocamlfind query volt` -I src -I tests -I _build/src/swig -I _build/src/{{parent}}{{^parent}}intro_ml{{/parent}} $0 $@
 *) use "topfind" ;;
 (* #!/usr/bin/env ocaml *)
 
@@ -19,7 +19,7 @@ let () =
 #require "str" ;;   (* #load "str.cma" ;; *)
 #require "num" ;;   (* #load "nums.cma" ;; *)
 
-(* #directory "~/.opam/system/lib/bolt" ;; *)
+(* #directory "~/.opam/system/lib/volt" ;; *)
 
 #require "bytes" ;;
 #require "bigarray" ;;
@@ -33,10 +33,10 @@ open Core.Std ;; *)
 #require "batteriesThread" ;;     (* #require "batteries" ;; *)
 open BatteriesThread ;;           (* open Batteries ;; *) *)
 
-#require "oUnit" ;;
+#require "ounit2" ;;
 #require "qcheck" ;;
 #load "bisect.cma" ;;
-#load "bolt.cma" ;;
+#load "volt.cma" ;;
 (* #require "ctypes" ;;
 #require "ctypes.foreign" ;; *)
 (* #load "swig.cma" ;; *)

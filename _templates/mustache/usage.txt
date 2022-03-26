@@ -1,0 +1,62 @@
+Templates for initializing project structure.
+
+Install packages for chosen rendering script:
+  
+  (ruby) gem install [--user-install] mustache
+  
+  [(groovy) grape install com.github.spullara.mustache.java compiler '[0.8.12,)']
+
+  (groovy) grape install com.github.jknack handlebars '[4.1.3,)'
+  
+  (python) pip install [--user] [pystache] chevron
+
+Example usage:
+  
+  ruby render_mustache.rb [--data data.yaml] skeleton-ml [date=2013-10-01]
+  
+  groovy render_mustache.groovy [--data data.yaml] skeleton-ml [--kvset date=2013-10-01]
+  
+  python render_mustache.py [--data data.yaml] skeleton-ml [--kvset date=2013-10-01]
+
+  #resulting project structure
+  
+  echo #---------- ; tree -aF --dirsfirst --matchdirs -I build intro_ml-util
+
+#----------
+intro_ml-util
+├── resources/
+│   ├── bolt_new.conf
+│   ├── greet.txt
+│   ├── prac.{conf,json,toml,xml,yaml}
+├── src/
+│   └── intro_ml/
+│       ├── META.bak
+│       ├── classic.{mli,ml}
+│       ├── dune[.bak]
+│       ├── intro_ml-util.mldylib.bak
+│       ├── intro_ml-util.mllib.bak
+│       ├── person.{ml,mli}
+│       ├── util.{ml,mli}
+│      [├── main.{ml,mli}]
+│      [└── main.sh]
+├── tests/
+│   ├── dune[.bak]
+│   ├── tc_classic.ml
+│   ├── tc_new.ml
+│   ├── tp_classic.ml
+│   ├── tp_new.ml
+│   ├── ts_main.ml
+│   └── ts_main.sh
+├── .editorconfig
+├── .{git,hg}ignore
+├── LICENSE
+├── Makefile
+├── Makefile-auxffi.mk
+├── README.rst
+├── _oasis.bak
+├── dune-project
+├── exclude.lst
+├── intro_ml-util.odocl.bak
+└── intro_ml-util.opam
+
+4 directories, 37 files

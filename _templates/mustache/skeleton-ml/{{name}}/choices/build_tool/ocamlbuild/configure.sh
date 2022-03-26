@@ -6,7 +6,7 @@ vpath=.
 debug=0
 
 if [ build = `basename $PWD` ] ; then
-	echo ; echo "ERROR: cd .. ; [sh] configure.sh [OPTIONS]" ;
+	echo ; echo "ERROR: cd .. ; [sh] ./configure.sh [OPTIONS]" ;
 	echo ; exit 1 ;
 fi
 
@@ -19,7 +19,7 @@ for opt in "$@" ; do
 	--enable-debug) debug=1 ;;
 	--disable-debug) debug=0 ;;
 	--help)
-		echo "Usage: [sh] configure.sh [OPTIONS]" ;
+		echo "Usage: [sh] ./configure.sh [OPTIONS]" ;
 		echo "options:" ;
 		echo "  --prefix=[${prefix}]: installation prefix" ;
 		echo "  --srcdir=[${srcdir}]: source code directory" ;

@@ -1,10 +1,10 @@
 # true: debug
-true: thread, warn(+a-4), package(num,str,unix)
-# true: thread, warn(+a-4), package(num,str,unix,ctypes,ctypes.foreign)
+true: thread, warn(+a-4), package(num,str,unix,dynlink)
+# true: thread, warn(+a-4), package(num,str,unix,dynlink,ctypes,ctypes.foreign)
 <**/src/{{parent}}{{^parent}}intro_ml{{/parent}}>: include
 # <**/src/swig> or <**/src/{{parent}}{{^parent}}intro_ml{{/parent}}>: include
-<tests/ts_main.*>: package(oUnit,qcheck)
-<tests/*.ml{,i,y}>: package(oUnit,qcheck)
+<tests/ts_main.*>: package(ounit2,qcheck)
+<tests/*.ml{,i,y}>: package(ounit2,qcheck)
 
 # <**/{{parent}}{{^parent}}intro_ml{{/parent}}/*{{name}}{{^name}}intro_ml-util{{/name}}*.*>: custom
 # "tests/ts_main.byte": custom

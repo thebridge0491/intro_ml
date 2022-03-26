@@ -1,0 +1,9 @@
+(library
+  (public_name {{name}}{{^name}}intro_ml-util{{/name}})
+  (name {{project}}{{^project}}util{{/project}})
+  ;(private_modules )
+  (libraries unix num str inifiles)
+  (synopsis "{{description}}{{^description}}Utilities sub-package for OCaml Intro examples project.{{/description}}")
+  (ocamlopt_flags -thread -w +a-4 -w -a-27)
+  (ocamlc_flags -thread -w +a-4 -w -a-27)
+  )

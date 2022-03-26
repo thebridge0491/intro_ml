@@ -21,17 +21,17 @@ ML_CFLAGS := $(ML_CFLAGS) -g -pp camlp4o,str.cma,`ocamlfind query bisect`/bisect
 endif
 
 ML_LFLAGS := $(ML_LFLAGS) -I src/$(parent) -I tests
-ML_CFLAGS := $(ML_CFLAGS) -I src/$(parent) -I tests -package oUnit,qcheck
+ML_CFLAGS := $(ML_CFLAGS) -I src/$(parent) -I tests -package ounit2,qcheck
 
 install_files := $(install_files) src/$(parent)/META build/src/$(parent)/*.cmi build/src/$(parent)/*.cmo build/src/$(parent)/*.cma
 optional_files := $(optional_files) build/src/$(parent)/*.cmx build/src/$(parent)/*.cmxa build/src/$(parent)/*.cmxs
 
 src_mli = $(shell $(MLDEP) -sort src/$(parent)/*.mli)
 src_ml = $(shell $(MLDEP) -sort src/$(parent)/*.ml)
-mllibs_main := $(mllibs_main) -package unix,num,str # -package core # -package ppx_sexp_conv
+mllibs_main := $(mllibs_main) -package unix,num,str,dynlink # -package core # -package ppx_sexp_conv
 
 tests_ml = $(shell $(MLDEP) -sort tests/*.ml)
-mllibs_tests := $(mllibs_tests) -package unix,num,str,oUnit,qcheck
+mllibs_tests := $(mllibs_tests) -package unix,num,str,dynlink,ounit2,qcheck
 
 build/.depend:
 	-@(cd build ; mkdir -p bin lib/pkgconfig share/doc/$(proj))

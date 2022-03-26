@@ -34,45 +34,45 @@ if '__main__' == __name__:
 	choices = {
 		'readmeext': '{{readmeext}}{{^readmeext}}.rst{{/readmeext}}',
 		'license': '{{license}}{{^license}}Apache-2.0{{/license}}',
-		'buildtool': '{{buildtool}}{{^buildtool}}oasis{{/buildtool}}',
+		'buildtool': '{{buildtool}}{{^buildtool}}dune{{/buildtool}}',
 		'testfrwk': '{{testfrwk}}{{^testfrwk}}ounit{{/testfrwk}}',
 		'executable': '{{executable}}{{^executable}}no{{/executable}}',
 		'ffilib': '{{ffilib}}{{^ffilib}}none{{/ffilib}}'
 		}
 	nesteddirs = "{{nesteddirs}}{{^nesteddirs}}intro_ml/util{{/nesteddirs}}"
 	parent = "{{parent}}{{^parent}}intro_ml{{/parent}}"
-	
-	if choices['testfrwk'] in ['ounit']:
-		copy_pathlist(glob.glob('build/choices/testfrwk/{0}/*'.format(
-			choices['testfrwk'])), ".")
-	else: # default: ounit
-		copy_pathlist(glob.glob('build/choices/testfrwk/ounit/*'),
-			".")
-	
-	if 'yes' != choices['executable']:
-		remove_pathlist(glob.glob("src/{0}/main.*".format(
-			parent)))
-
-	if choices['ffilib'] in ['ctypes.foreign', 'swig']:
-		copy_pathlist(glob.glob('build/choices/ffi_lib/{0}/*'.format(
-			choices['ffilib'])), "src/{0}/".format(parent))
 
 	copy_pathlist(glob.glob('build/choices/readme/README{0}'.format(
 		choices['readmeext'])), 'README{0}'.format(choices['readmeext']))
-	copy_pathlist(glob.glob('build/choices/_parent_readme/README{0}'.format(
-		choices['readmeext'])), 'build/choices/_parent_init/README{0}'.format(
-		choices['readmeext']))
+	if os.path.exists('build/choices/_parent_readme'):
+		copy_pathlist(glob.glob('build/choices/_parent_readme/README{0}'.format(
+			choices['readmeext'])), 'build/choices/_parent_init/README{0}'.format(
+			choices['readmeext']))
 
-	if choices['license'] in ['Apache-2.0', 'MIT', 'BSD-3-Clause', 
-			'GPL-3.0+', 'ISC', 'Unlicense']:
+	if choices['license'] in ['Apache-2.0', 'MIT', 'BSD-3-Clause', 'GPL-3.0+', 'ISC',
+			'Unlicense']:
 		copy_pathlist(glob.glob('build/choices/license/LICENSE_{0}'.format(
 			choices['license'])), 'LICENSE')
 
-	if choices['buildtool'] in ['oasis', 'ocamlbuild', 'make']:
+	if os.path.exists('build/choices/build_tool') and choices['buildtool'] in ['dune', 'oasis', 'ocamlbuild', 'make']:
 		copy_pathlist(glob.glob('build/choices/build_tool/{0}/*'.format(
 			choices['buildtool'])), '.')
-	else: # default: oasis
-		copy_pathlist(glob.glob('build/choices/build_tool/oasis/*'), '.')
+	elif os.path.exists('build/choices/build_tool'): # default: dune
+		copy_pathlist(glob.glob('build/choices/build_tool/dune/*'), '.')
+	
+	if os.path.exists('build/choices/testfrwk') and choices['testfrwk'] in ['ounit']:
+		copy_pathlist(glob.glob('build/choices/testfrwk/{0}/*'.format(
+			choices['testfrwk'])), ".")
+	elif os.path.exists('build/choices/testfrwk'): # default: ounit
+		copy_pathlist(glob.glob('build/choices/testfrwk/ounit/*'),
+			".")
+	
+	if os.path.exists('src') and 'yes' != choices['executable']:
+		remove_pathlist(glob.glob("src/{0}/main.*".format(parent)))
+
+	if os.path.exists('build/choices/ffi_lib') and choices['ffilib'] in ['ctypes.foreign', 'swig']:
+		copy_pathlist(glob.glob('build/choices/ffi_lib/{0}/*'.format(
+			choices['ffilib'])), "src/{0}/".format(parent))
 	
 	if os.path.exists('../_templates') and os.path.isdir('../_templates'):
 		skeletondir = {{#skeletondir}}'{{skeletondir}}'{{/skeletondir}}{{^skeletondir}}'{0}/Templates/mustache/skeleton-ml'.format(os.getenv('HOME')){{/skeletondir}}
@@ -82,3 +82,4 @@ if '__main__' == __name__:
 		os.makedirs(os.path.join('../_templates/mustache'), exist_ok=True)
 		copy_pathlist(glob.glob('{0}/render_mustache.*'.format(
 			skel_pardir))+[skeletondir], '../_templates/mustache/')
+

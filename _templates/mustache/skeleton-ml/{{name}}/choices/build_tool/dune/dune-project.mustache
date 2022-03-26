@@ -1,0 +1,35 @@
+(lang dune 1.10)
+;(name {{project}}{{^project}}util{{/project}})
+(generate_opam_files true)
+
+;(explicit_js_mode)
+(version {{version}}{{^version}}0.1.0{{/version}})
+(license {{license}}{{^license}}Apache-2.0{{/license}})
+(authors {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}})
+(maintainers {{author}}{{^author}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}{{/author}} <{{email}}{{^email}}{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}-codelab@yahoo.com{{/email}})
+(source (uri git+https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}.git))
+(bug_reports "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}")
+(homepage "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}")
+(documentation "https://{{repohost}}{{^repohost}}bitbucket.org{{/repohost}}/{{repoacct}}{{^repoacct}}imcomputer{{/repoacct}}/{{parent}}{{^parent}}intro_ml{{/parent}}")
+
+(package
+  (name {{name}}{{^name}}intro_ml-util{{/name}})
+  (tags (demo intro {{project}}{{^project}}util{{/project}}))
+  (depopts
+    (odoc (and :with-doc (>= 1.5.0)))
+    )
+  (depends
+    (dune (>= 1.10))
+    (volt (>= 1.2))
+    (ocaml-inifiles (>= 1.0))
+    {{#executable}}
+    (yojson (>= 1.2))
+    (ezjsonm (>= 0.4))
+    {{/executable}}
+    ;(ctypes (>= 0.4))
+    ;(ctypes-foreign (>= 0.4))
+    (ounit2 (and :with-test (>= 2.2.0)))
+    (qcheck (and :with-test (>= 0.13)))
+    )
+  (synopsis "{{description}}{{^description}}Utilities sub-package for OCaml Intro examples project.{{/description}}")
+  )

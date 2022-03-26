@@ -1,17 +1,26 @@
-# OASIS_START
-# DO NOT EDIT (digest: d41d8cd98f00b204e9800998ecf8427e)
-# OASIS_STOP
+build:
+	dune build
+clean:
+	dune clean
+uninstall:
+	dune uninstall
+install:
+	dune install ; opam list $(proj) ; sleep 3
+doc:
+	dune build @doc
+test:
+	dune runtest -f
 
-prefix = $(shell $(SETUP) -configure | sed -n 's|Install architecture-independent files dir: [.]* \(.*\)|\1|p')
+prefix ?= /usr/local
 
 PKG_CONFIG = pkg-config --with-path=$(prefix)/lib/pkgconfig
 
 parent = {{parent}}{{^parent}}intro_ml{{/parent}}
 pkg = {{project}}{{^project}}util{{/project}}
 proj = $(parent)-$(pkg)
-version = $(shell $(SETUP) -configure | sed -n 's|Package version: [.]* \(.*\)|\1|p')
+version ?= {{version}}{{^version}}0.1.0{{/version}}
 
-help: 
+help:
 	@echo "##### subproject: $(proj) #####"
 	@echo "Usage: $(MAKE) [target] -- some valid targets:"
 	-@for fileX in $(MAKEFILE_LIST) `if [ -z "$(MAKEFILE_LIST)" ] ; then echo Makefile ; fi` ; do \
@@ -25,25 +34,11 @@ help:
 FMTS ?= tar.gz,zip
 distdir = $(proj).$(version)
 
-install_files := $(install_files) src/$(parent)/META _build/src/$(parent)/*.cmi _build/src/$(parent)/*.cmo _build/src/$(parent)/*.cma
-optional_files := $(optional_files) _build/src/$(parent)/*.cmx _build/src/$(parent)/*.cmxa _build/src/$(parent)/*.cmxs
-
 build/$(distdir) : 
 	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
 #	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
 	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
 
-uninstall install: 
-	-mkdir -p `opam config var lib`/$(parent)
-	-if [ "uninstall" = "$@" ] ; then \
-		ocamlfind remove -destdir `opam config var lib`/$(parent) $(pkg) ; \
-	else \
-		ocamlfind install -destdir `opam config var lib`/$(parent) $(pkg) \
-			$(install_files) -optional $(optional_files) -ldconf ignore ; \
-	fi
-	-cat `opam config var lib`/$(parent)/*/META \
-		> `opam config var lib`/$(parent)/META
-	-opam list $(proj) ; sleep 3
 dist: | build/$(distdir) ## [FMTS="tar.gz,zip"] archive source code
 	-@for fmt in `echo $(FMTS) | tr ',' ' '` ; do \
 		case $$fmt in \
@@ -60,26 +55,10 @@ dist: | build/$(distdir) ## [FMTS="tar.gz,zip"] archive source code
 		esac \
 	done
 	-@rm -r build/$(distdir)
-report: 
+report:
 	-mkdir -p _build/cov
 	-bisect-report -I _build -html _build/cov/report_main `ls -t _build/bisect_main*.out | head -n1`
 	-bisect-report -I _build -html _build/cov/report_test `ls -t _build/bisect_test*.out | head -n1`
 
-{{#executable}}
-DEBUGGER = ddd --gdb        # lldb ; ddd --gdb; gdb
-# valgrind tools: memcheck helgrind cachegrind massif lackey
-VALGRIND = valgrind --verbose --tool=memcheck
-
-run: _build/src/$(parent)/main.native
-#	export [DY]LD_LIBRARY_PATH=. # ([da|ba|z]sh Linux)
-#	setenv [DY]LD_LIBRARY_PATH . # (tcsh FreeBSD)
-	-BISECT_FILE=_build/bisect_main BOLT_CONFIG=resources/bolt_new.conf \
-		_build/src/$(parent)/main.native $(ARGS)
-debug: _build/src/$(parent)/main.byte
-	-BISECT_FILE=_build/bisect_main $(DEBUGGER) \
-		_build/src/$(parent)/main.byte $(ARGS)
-valgrind: _build/src/$(parent)/main.native
-	-BISECT_FILE=_build/bisect_main $(VALGRIND) _build/src/$(parent)/main.native
-{{/executable}}
 
 #-include Makefile-auxffi.mk

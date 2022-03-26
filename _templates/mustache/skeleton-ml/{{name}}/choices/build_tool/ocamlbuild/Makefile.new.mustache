@@ -21,9 +21,9 @@ ML_CFLAGS := $(ML_CFLAGS) # -cflags -w +a-4 -Is src/$(parent),_build/src/$(paren
 install_files := $(install_files) src/$(parent)/META _build/src/$(parent)/*.cmi _build/src/$(parent)/*.cmo _build/src/$(parent)/*.cma
 optional_files := $(optional_files) _build/src/$(parent)/*.cmx _build/src/$(parent)/*.cmxa _build/src/$(parent)/*.cmxs
 
-mllibs_main := $(mllibs_main) # -pkgs unix,num,str # -pkgs core # -pkgs ppx_sexp_conv
+mllibs_main := $(mllibs_main) # -pkgs unix,num,str,dynlink # -pkgs core # -pkgs ppx_sexp_conv
 
-mllibs_tests := $(mllibs_tests) -libs $(proj) # -pkgs unix,num,str,oUnit,qcheck
+mllibs_tests := $(mllibs_tests) -libs $(proj) # -pkgs unix,num,str,ounit2,qcheck
 
 tests/ts_main.byte tests/ts_main.native : 
 	-$(MLBUILD) $(ML_LFLAGS) $(ML_CFLAGS) $(mllibs_tests) $@ $(ARGS)

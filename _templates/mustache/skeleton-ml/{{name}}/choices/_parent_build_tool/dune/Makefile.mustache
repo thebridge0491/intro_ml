@@ -8,13 +8,10 @@ parent = {{parent}}{{^parent}}intro_ml{{/parent}}
 version = {{version}}{{^version}}0.1.0{{/version}}
 SUBDIRS = common app
 
-.PHONY: configure all build help clean test uninstall install
-configure: $(SUBDIRS) ## configure [OPTS=""]
-	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ $(CONFIGUREFLAGS) ; done
+.PHONY: all build help clean test uninstall install
 help: $(SUBDIRS)
 	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ ; done
 	@echo "##### Top-level multiproject: $(parent) #####"
-	@echo "       $(MAKE) [SUBDIRS="$(SUBDIRS)"] configure [OPTS=??]"
 	@echo "Usage: $(MAKE) [SUBDIRS="$(SUBDIRS)"] [target]"
 all build test uninstall install: $(SUBDIRS)
 	-for dirX in $^ ; do $(MAKE) -C $$dirX $@ ; done

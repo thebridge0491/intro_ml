@@ -1,0 +1,52 @@
+#!/bin/sh
+
+mkdir -p build ; cp -R choices build/
+rm -r choices
+
+proj_dir=`pwd`
+readmeext={{readmeext}}{{^readmeext}}.rst{{/readmeext}}
+license={{license}}{{^license}}Apache-2.0{{/license}}
+buildtool={{buildtool}}{{^buildtool}}dune{{/buildtool}}
+testfrwk={{testfrwk}}{{^testfrwk}}ounit{{/testfrwk}}
+executable={{executable}}{{^executable}}no{{/executable}}
+ffilib={{ffilib}}{{^ffilib}}none{{/ffilib}}
+
+parent={{parent}}{{^parent}}intro_ml{{/parent}}
+
+cp build/choices/readme/README${readmeext} README${readmeext}
+if [ -d build/choices/_parent_readme ] ; then
+    cp build/choices/_parent_readme/README${readmeext} \
+	    build/choices/_parent_init/README${readmeext} ;
+fi
+
+if [ ! 'Not open source' = "${license}" ] ; then
+    cp build/choices/license/LICENSE_${license} LICENSE ;
+fi
+
+if [ -d build/choices/build_tool ] && [ ! 'dune' = "${buildtool}" ] ; then
+	cp -R build/choices/build_tool/${buildtool}/* . ;
+elif [ -d build/choices/build_tool ] ; then # default: dune
+	cp -R build/choices/build_tool/dune/* . ;
+fi
+
+if [ -d build/choices/testfrwk ] && [ ! "ounit" = "${testfrwk}" ] ; then
+	cp -R build/choices/testfrwk/${testfrwk}/* . ;
+elif [ -d build/choices/testfrwk ] ; then # default: ounit
+	cp -R build/choices/testfrwk/ounit/* . ;
+fi
+
+if [ -d src ] && [ ! "yes" = "${executable}" ] ; then
+    rm src/${parent}/main.* ;
+fi
+
+if [ -d build/choices/ffi_lib ] && [ '' = "$(echo "${ffilib}" | grep -E 'none')" ] ; then
+	cp -R build/choices/ffi_lib/${ffilib}/* src/${parent}/ ;
+fi
+
+if [ -d '../_templates' ] ; then
+	skeletondir={{skeletondir}}{{^skeletondir}}$HOME/Templates/mustache/skeleton-ml{{/skeletondir}} ;
+	skel_pardir=`dirname ${skeletondir}` ;
+	rm -fr ../_templates/mustache/`basename ${skeletondir}` ;
+	mkdir -p ../_templates/mustache ;
+	cp -R ${skel_pardir}/render_mustache.* ${skeletondir} ../_templates/mustache/ ;
+fi
