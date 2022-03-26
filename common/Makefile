@@ -5,11 +5,11 @@ clean:
 uninstall:
 	dune uninstall
 install:
-	dune install
+	dune install ; opam list $(proj) ; sleep 3
 doc:
 	dune build @doc
 test:
-	dune test -f
+	dune runtest -f
 
 prefix ?= /usr/local
 
@@ -31,23 +31,27 @@ help:
 #		awk 'BEGIN {FS = ":.*?## "}; {printf "%-25s%s\n", $$1, $$2}' ; \
 #	done
 
-FMTS ?= tar.gz
+FMTS ?= tar.gz,zip
 distdir = $(proj).$(version)
 
-dist:
+build/$(distdir) : 
 	-@mkdir -p build/$(distdir) ; cp -f exclude.lst build/
 #	#-zip -9 -q --exclude @exclude.lst -r - . | unzip -od build/$(distdir) -
 	-tar --format=posix --dereference --exclude-from=exclude.lst -cf - . | tar -xpf - -C build/$(distdir)
 
+dist: | build/$(distdir) ## [FMTS="tar.gz,zip"] archive source code
 	-@for fmt in `echo $(FMTS) | tr ',' ' '` ; do \
 		case $$fmt in \
+			7z) echo "### build/$(distdir).7z ###" ; \
+				rm -f build/$(distdir).7z ; \
+				(cd build ; 7za a -t7z -mx=9 $(distdir).7z $(distdir)) ;; \
 			zip) echo "### build/$(distdir).zip ###" ; \
 				rm -f build/$(distdir).zip ; \
 				(cd build ; zip -9 -q -r $(distdir).zip $(distdir)) ;; \
-			*) tarext=`echo $$fmt | grep -e '^tar$$' -e '^tar.xz$$' -e '^tar.bz2$$' || echo tar.gz` ; \
+			*) tarext=`echo $$fmt | grep -e '^tar$$' -e '^tar.xz$$' -e '^tar.zst$$' -e '^tar.bz2$$' || echo tar.gz` ; \
 				echo "### build/$(distdir).$$tarext ###" ; \
 				rm -f build/$(distdir).$$tarext ; \
-				(cd build ; tar --posix -L -caf $(distdir).$$tarext $(distdir)) ;; \
+				(cd build ; tar --posix -h -caf $(distdir).$$tarext $(distdir)) ;; \
 		esac \
 	done
 	-@rm -r build/$(distdir)

@@ -8,7 +8,7 @@ Plugins:     META (0.4), DevFiles (0.4)
 #
 ocamlversion:   >= 4.01
 BetaFeatures: findlib_directory
-BuildDepends: unix,num,str
+BuildDepends: unix,num,str,dynlink
 BuildTools:  ocamlbuild
 LicenseFile: LICENSE
 AlphaFeatures: ocamlbuild_more_args
@@ -35,7 +35,7 @@ Executable ts_main
   Path:      tests
   MainIs:    ts_main.ml
 #
-  BuildDepends: oUnit,qcheck,batteries,intro_ml.util
+  BuildDepends: ounit2,qcheck,batteries,intro_ml.util
   Install:   false
   Build$:    flag(build_test)
   #CompiledObject: best
@@ -54,7 +54,7 @@ Executable "Main-intro_ml-intro"
   Path:      src/intro_ml
   MainIs:    main.ml
 #
-  BuildDepends: inifiles,bolt,yojson,ezjsonm,intro_ml.util,intro_ml.practice
+  BuildDepends: inifiles,volt,yojson,ezjsonm,intro_ml.util,intro_ml.practice
   #CompiledObject: best
   ByteOpt:   -thread -w +a-4
   #ByteOpt:   -thread -w +a-4 -custom

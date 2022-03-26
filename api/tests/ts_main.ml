@@ -1,7 +1,7 @@
 (** Main test suite
 *)
 
-open OUnit
+open OUnit2
 
 (** Suite of test cases
 *)

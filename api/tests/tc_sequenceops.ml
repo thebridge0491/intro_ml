@@ -1,14 +1,14 @@
 (** Sequence Ops test cases
 *)
 
-open OUnit
+open OUnit2
 open Practice.Sequenceops
 
 let set_up_class _ = Printf.printf "SetUpClass ...\n"
 let tear_down_class _ = Printf.printf "... TearDownClass\n"
 
 let set_up _ = Printf.printf "SetUp ...\n"
-let tear_down _ = Printf.printf "... TearDown\n"
+let tear_down _ ctx = Printf.printf "... TearDown\n"
 
 let epsilon = 0.001
 (* let (lst, revlst) = ([0;1;2;3;4], List.rev [0;1;2;3;4]) *)
@@ -208,7 +208,7 @@ let test_concat _ =
 (** Suite of test cases
 *)
 let tcases = "Tc_sequenceops" >::: (List.map (fun (f, nm) -> 
-        (nm >:: (bracket set_up f tear_down)))
+        (nm >:: (fun ctx -> f @@ bracket set_up tear_down ctx)))
     [(test_tabulate, "test_tabulate"); (test_length, "test_length")
     ; (test_nth, "test_nth"); (test_findi, "test_findi")
     ; (test_find, "test_find"); (test_min_max, "test_min_max")

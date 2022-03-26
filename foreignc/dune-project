@@ -13,16 +13,18 @@
 (documentation "https://bitbucket.org/thebridge0491/intro_ml")
 
 (package
-	(name intro_ml-foreignc)
-	(tags (demo intro ffi foreign))
-	(depopts
-		(odoc :build)
-		)
-	(depends
-		(dune (>= 1.10))
+  (name intro_ml-foreignc)
+  (tags (demo intro ffi foreign))
+  (depopts
+    (odoc (and :with-doc (>= 1.5.0)))
+    )
+  (depends
+    (dune (>= 1.10))
     (ctypes (>= 0.4))
     (ctypes-foreign (>= 0.4))
     (intro_ml-util (>= 0.1.0))
-		)
-	(synopsis "FFI sub-package for OCaml Intro examples project.")
-	)
+    (ounit2 (and :with-test (>= 2.2.0)))
+    (qcheck (and :with-test (>= 0.13)))
+    )
+  (synopsis "FFI sub-package for OCaml Intro examples project.")
+  )

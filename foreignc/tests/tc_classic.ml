@@ -1,14 +1,14 @@
 (** Classic test cases
 *)
 
-open OUnit
+open OUnit2
 open Foreignc
 
 let set_up_class _ = Printf.printf "SetUpClass ...\n"
 let tear_down_class _ = Printf.printf "... TearDownClass\n"
 
 let set_up _ = Printf.printf "SetUp ...\n"
-let tear_down _ = Printf.printf "... TearDown\n"
+let tear_down _ ctx = Printf.printf "... TearDown\n"
 
 let epsilon = 0.001
 
@@ -33,6 +33,6 @@ let test_expt _ = List.iter (fun (func_a, b, n) ->
 (** Suite of test cases
 *)
 let tcases = "Tc_classic" >::: (List.map (fun (f, nm) -> 
-        (nm >:: (bracket set_up f tear_down)))
+        (nm >:: (fun ctx -> f @@ bracket set_up tear_down ctx)))
     [(test_fact, "test_fact"); (test_expt, "test_expt")
     ])

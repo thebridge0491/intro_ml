@@ -3,7 +3,7 @@ Intro_ml.Util
 .. .rst to .html: rst2html5 foo.rst > foo.html
 ..                pandoc -s -f rst -t html5 -o foo.html foo.rst
 
-Utilites sub-package for OCaml Intro examples project.
+Utilities sub-package for OCaml Intro examples project.
 
 Installation
 ------------
@@ -27,13 +27,18 @@ make build [test]
 [sudo] make install
 
 build example with oasis:
-cd <path>
-
-[oasis setup -setup-update none]
+cd <path> [; oasis setup -setup-update none]
 
 ocaml setup.ml -configure --enable-tests [--prefix $PREFIX]
 
 opam pin add . ; opam install . [; ocaml setup.ml [-info] -install]
+
+build example with dune:
+cd <path> ; opam pin add [--with-test] .
+
+dune build [runtest -f]
+
+dune install
 
 Usage
 -----

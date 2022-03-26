@@ -13,16 +13,19 @@
 (documentation "https://bitbucket.org/thebridge0491/intro_ml")
 
 (package
-	(name intro_ml-practice)
-	(tags (demo intro practice))
-	(depopts
-		(odoc :build)
-		)
-	(depends
-		(dune (>= 1.10))
-    (bolt (>= 1.2))
+  (name intro_ml-practice)
+  (tags (demo intro practice))
+  (depopts
+    (odoc (and :with-doc (>= 1.5.0)))
+    )
+  (depends
+    (dune (>= 1.10))
+    (volt (>= 1.2))
     (bisect (>= 1.1))
+    (batteries (>= 2.7.0))
     (intro_ml-util (>= 0.1.0))
-		)
-	(synopsis "Practice sub-package for OCaml Intro examples project.")
-	)
+    (ounit2 (and :with-test (>= 2.2.0)))
+    (qcheck (and :with-test (>= 0.13)))
+    )
+  (synopsis "Practice sub-package for OCaml Intro examples project.")
+  )

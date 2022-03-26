@@ -1,6 +1,6 @@
 (test
 	(name ts_main)
-	(libraries unix num str oUnit qcheck intro_ml-util intro_ml-foreignc)
+	(libraries unix num str ounit2 qcheck intro_ml-util intro_ml-foreignc)
 	(ocamlopt_flags -thread -w +a-4 -w -a-27)
 	(ocamlc_flags -thread -w +a-4 -w -a-27)
 	(deps

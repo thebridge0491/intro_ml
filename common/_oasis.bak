@@ -1,14 +1,14 @@
 OASISFormat: 0.4
 Name:        Intro_ml.Util
 Version:     0.1.0
-Synopsis:    Utilites sub-package for OCaml Intro examples project.
+Synopsis:    Utilities sub-package for OCaml Intro examples project.
 Authors:     thebridge0491
 License:     Apache-2.0
 Plugins:     META (0.4), DevFiles (0.4)
 #
 ocamlversion:   >= 4.01
 BetaFeatures: findlib_directory
-BuildDepends: unix,num,str
+BuildDepends: unix,num,str,dynlink
 BuildTools:  ocamlbuild
 LicenseFile: LICENSE
 AlphaFeatures: ocamlbuild_more_args
@@ -35,7 +35,7 @@ Library "intro_ml.util"
   Modules:   Util
 #
   InternalModules: 
-  BuildDepends: inifiles
+  BuildDepends: inifiles,volt
   FindlibContainers: intro_ml
   FindlibDirectory: util
   FindlibName: util
@@ -44,7 +44,7 @@ Library "intro_ml.util"
   #ByteOpt:   -thread -w +a-4 -custom
   NativeOpt: -thread -w +a-4
   ## note: ocaml setup.ml -configure --prefix $(PREFIX)
-  #CCOpt:     -Wall -pedantic -std=c99 -m64 -fPIC -I$prefix/include
+  #CCOpt:     -Wall -pedantic -std=c99 -fPIC -I$prefix/include
   #CCLib:     -rpath $prefix/lib -L$prefix/lib -lintro_c-practice
   #Modules+:  Ffi_??
   #InternalModules+: Classic_c
@@ -68,7 +68,7 @@ Executable ts_main
   Path:      tests
   MainIs:    ts_main.ml
 #
-  BuildDepends: oUnit,qcheck,intro_ml.util
+  BuildDepends: ounit2,qcheck,intro_ml.util
   Install:   false
   Build$:    flag(build_test)
   #CompiledObject: best

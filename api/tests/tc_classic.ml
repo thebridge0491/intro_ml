@@ -1,14 +1,14 @@
 (** Classic test cases
 *)
 
-open OUnit
+open OUnit2
 open Practice.Classic
 
 let set_up_class _ = Printf.printf "SetUpClass ...\n"
 let tear_down_class _ = Printf.printf "... TearDownClass\n"
 
 let set_up _ = Printf.printf "SetUp ...\n"
-let tear_down _ = Printf.printf "... TearDown\n"
+let tear_down _ ctx = Printf.printf "... TearDown\n"
 
 let epsilon = 0.001
 
@@ -141,7 +141,7 @@ let test_compose _ =
 (** Suite of test cases
 *)
 let tcases = "Tc_classic" >::: (List.map (fun (f, nm) -> 
-        (nm >:: (bracket set_up f tear_down)))
+        (nm >:: (fun ctx -> f @@ bracket set_up tear_down ctx)))
     [(test_square, "test_square"); (test_expt, "test_expt")
     ; (test_sum_to, "test_sum_to"); (test_fact, "test_fact")
     ; (test_fib, "test_fib"); (test_pascaltri, "test_pascaltri")

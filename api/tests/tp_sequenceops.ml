@@ -255,8 +255,8 @@ let prop_unfold_right_unprod arbInt =
 
 (** Suite of test properties
 *)
-let tprops = OUnit.( >::: ) "Tp_sequenceops" (List.map 
-	(QCheck_runner.to_ounit_test ~verbose:true)
+let tprops = OUnit2.( >::: ) "Tp_sequenceops" (List.map 
+	(QCheck_runner.to_ounit2_test)
 	[prop_tabulate (fun i -> i + 2) Q.(0 -- 20)
 	; prop_length Q.(list_of_size Gen.(0 -- 20) (0 -- 100))
 	; prop_nth Q.(pair (0 -- 19) (list_of_size Gen.(1 -- 20) (0 -- 100)))

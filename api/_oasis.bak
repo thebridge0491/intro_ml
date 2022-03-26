@@ -8,7 +8,7 @@ Plugins:     META (0.4), DevFiles (0.4)
 #
 ocamlversion:   >= 4.01
 BetaFeatures: findlib_directory
-BuildDepends: unix,num,str
+BuildDepends: unix,num,str,dynlink
 BuildTools:  ocamlbuild
 LicenseFile: LICENSE
 AlphaFeatures: ocamlbuild_more_args
@@ -37,7 +37,7 @@ Library "intro_ml.practice"
   InternalModules: Practice_Classic,Practice_Sequenceops
                   , Practice_Classic_Puzzles,Practice_Classic_Hiorder
                   , Practice_Sequenceops_Hiorder,Practice_Classic_Streams
-  BuildDepends: bolt,bisect,batteries,intro_ml.util
+  BuildDepends: volt,bisect,batteries,intro_ml.util
   FindlibContainers: intro_ml
   FindlibDirectory: practice
   FindlibName: practice
@@ -60,7 +60,7 @@ Executable ts_main
   Path:      tests
   MainIs:    ts_main.ml
 #
-  BuildDepends: oUnit,qcheck,bisect,intro_ml.util,intro_ml.practice
+  BuildDepends: ounit2,qcheck,bisect,intro_ml.util,intro_ml.practice
   Install:   false
   Build$:    flag(build_test)
   #CompiledObject: best

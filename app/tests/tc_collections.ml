@@ -1,7 +1,7 @@
 (** Collections test cases
 *)
 
-open OUnit
+open OUnit2
 
 module CharSet = Set.Make(Util.CharOrd)
 
@@ -15,7 +15,7 @@ let set_up_class _ = Printf.printf "SetUpClass ...\n"
 let tear_down_class _ = Printf.printf "... TearDownClass\n"
 
 let set_up _ = Printf.printf "SetUp ...\n"
-let tear_down _ = Printf.printf "... TearDown\n"
+let tear_down _ ctx = Printf.printf "... TearDown\n"
 
 let test_lists _ = 
     let lst = [2; 1; 0; 4; 3;] in
@@ -177,7 +177,7 @@ let test_heaps _ =
 (** Suite of test cases
 *)
 let tcases = "Tc_collections" >::: (List.map (fun (f, nm) -> 
-        (nm >:: (bracket set_up f tear_down)))
+        (nm >:: (fun ctx -> f @@ bracket set_up tear_down ctx)))
     [(test_lists, "test_lists"); (test_1darrays, "test_1darrays")
     ; (test_2darrays, "test_2darrays"); (test_alists, "test_alists")
     ; (test_sets, "test_sets"); (test_maps, "test_maps")

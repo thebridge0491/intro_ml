@@ -28,8 +28,8 @@ let prop_expt arb2Flts = Q.(Test.make ~count:100 arb2Flts
 
 (** Suite of test properties
 *)
-let tprops = OUnit.( >::: ) "Tp_classic" (List.map 
-	(QCheck_runner.to_ounit_test ~verbose:true)
+let tprops = OUnit2.( >::: ) "Tp_classic" (List.map 
+	(QCheck_runner.to_ounit2_test)
 	[prop_fact Q.(map Int64.of_int (0 -- 18))
 	; prop_expt Q.(pair (map float_of_int (1 -- 20)) (map float_of_int (2 -- 10)))
 	])

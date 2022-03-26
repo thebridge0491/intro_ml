@@ -193,8 +193,8 @@ let prop_composeFlt f g arbFlt = Q.(Test.make ~count:100 arbFlt
 
 (** Suite of test properties
 *)
-let tprops = OUnit.( >::: ) "Tp_classic" (List.map 
-	(QCheck_runner.to_ounit_test ~verbose:true)
+let tprops = OUnit2.( >::: ) "Tp_classic" (List.map 
+	(QCheck_runner.to_ounit2_test)
 	[prop_expt Q.(pair (map float_of_int (1 -- 20)) 
 		(map float_of_int (2 -- 10)))
 	; prop_square Q.(map float_of_int (1 -- 20))

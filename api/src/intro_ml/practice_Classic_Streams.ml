@@ -1,32 +1,42 @@
 let squares_strm () =
-    (*let rec iter z = Stream.icons (z *. z) (iter (z +. 1.0))
-in Stream.icons 0.0 (iter 1.0)*)
-	let rec iter z = [<'(z *. z); iter (z +. 1.0)>]
-in [<'0.0; iter 1.0>]
+    (*let rec iter z = [<'(z *. z); iter (z +. 1.0)>]
+in [<'0.0; iter 1.0>]*)
+    let rec iter z = Stream.icons (z *. z) (iter (z +. 1.0))
+in Stream.icons 0.0 (iter 1.0)
 
 let expts_strm b =
-    let rec iter z = [<'(z *. b); iter (z *. b)>]
-in [<'1.0; iter 1.0>]
+    (*let rec iter z = [<'(z *. b); iter (z *. b)>]
+in [<'1.0; iter 1.0>]*)
+    let rec iter z = Stream.icons (z *. b) (iter (z *. b))
+in Stream.icons 0.0 (iter 1.0)
 
 
 let sums_strm lo =
-    let rec iter z ct = [<'(Int64.add z ct); 
+    (*let rec iter z ct = [<'(Int64.add z ct); 
 		iter (Int64.add z ct) (Int64.add ct 1L)>]
-in [<'lo; iter lo (Int64.add lo 1L)>]
+in [<'lo; iter lo (Int64.add lo 1L)>]*)
+    let rec iter z ct = Stream.icons (Int64.add z ct) (iter (Int64.add z ct) (Int64.add ct 1L))
+in Stream.icons lo (iter lo (Int64.add lo 1L))
 
 let facts_strm () =
-    let rec iter z ct =
+    (*let rec iter z ct =
         [<'(Int64.mul z ct); iter (Int64.mul z ct) (Int64.add ct 1L)>]
-in [<'1L; iter 1L 1L>]
+in [<'1L; iter 1L 1L>]*)
+    let rec iter z ct = Stream.icons (Int64.mul z ct) (iter (Int64.mul z ct) (Int64.add ct 1L))
+in Stream.icons 1L (iter 1L 1L)
 
 
 let fibs_strm () =
-    let rec iter s0 s1 = [<'(s0 + s1); iter s1 (s0 + s1)>]
-in [<'0; '1; iter 0 1>]
+    (*let rec iter s0 s1 = [<'(s0 + s1); iter s1 (s0 + s1)>]
+in [<'0; '1; iter 0 1>]*)
+    let rec iter s0 s1 = Stream.icons (s0 + s1) (iter s1 (s0 + s1))
+in Stream.icons 0 (Stream.icons 1 (iter 0 1))
 
 let pascalrows_strm () =
-    let rec iter row =
+    (*let rec iter row =
         [<'row; iter (List.map2 (fun a b -> a + b) (0::row) (row @ [0]))>]
+in iter [1]*)
+    let rec iter row = Stream.icons row (iter (List.map2 (fun a b -> a + b) (0::row) (row @ [0])))
 in iter [1]
 
 

@@ -1,9 +1,9 @@
 (* multi-line comment
     -- run w/out compile --
-    BOLT_CONFIG=bolt.conf [sh | [ocaml | utop] -I `ocamlfind query bolt`] main.sh arg1 argN
+    BOLT_CONFIG=bolt.conf [sh | [ocaml | utop] -I `ocamlfind query volt`] main.sh arg1 argN
 
     -- run REPL, load script, & run --
-    BOLT_CONFIG=bolt.conf [ocaml | utop] -I `ocamlfind query bolt` -init main.sh
+    BOLT_CONFIG=bolt.conf [ocaml | utop] -I `ocamlfind query volt` -init main.sh
     # Main.main ([|Sys.argv.(2); arg1; argN|])
 
     -- help/info tools in REPL --

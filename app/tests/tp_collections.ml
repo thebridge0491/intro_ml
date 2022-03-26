@@ -68,8 +68,8 @@ let prop_revSortIsRevOrdered arbXs = Q.(Test.make ~count:100 arbXs
 
 (** Suite of test properties
 *)
-let tprops = OUnit.( >::: ) "Tp_collections" (List.map 
-	(QCheck_runner.to_ounit_test ~verbose:true)
+let tprops = OUnit2.( >::: ) "Tp_collections" (List.map 
+	(QCheck_runner.to_ounit2_test)
 	[prop_cons Q.(pair genInts (list genInts))
 	; prop_null Q.(list genInts)
 	; prop_equal Q.(list_of_size Gen.(1 -- 20) genInts)
